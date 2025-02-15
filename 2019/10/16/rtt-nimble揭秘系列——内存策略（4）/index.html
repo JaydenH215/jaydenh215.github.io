@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="rtthread,nimble," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="内存策略是每个协议栈的基石之一，所谓百尺高楼平地起，看看nimble的钢筋混凝土有没黑科技。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rtt+nimble揭秘系列——内存策略（4）">
+<meta property="og:url" content="https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/index.html">
+<meta property="og:site_name" content="Jayden&#39;s Blog">
+<meta property="og:description" content="内存策略是每个协议栈的基石之一，所谓百尺高楼平地起，看看nimble的钢筋混凝土有没黑科技。">
+<meta property="og:locale">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/double_link.svg">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/tailq.jpg">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/list.jpg">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/mempool.jpg">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/membuf.jpg">
+<meta property="article:published_time" content="2019-10-15T16:56:18.000Z">
+<meta property="article:modified_time" content="2025-02-15T08:13:09.231Z">
+<meta property="article:author" content="Jayden Huang">
+<meta property="article:tag" content="rtthread">
+<meta property="article:tag" content="nimble">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/double_link.svg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jaydenh215.github.io/2019/10/16/rtt-nimble揭秘系列——内存策略（4）/"/>
+
+
+
+
+
+  <title>rtt+nimble揭秘系列——内存策略（4） | Jayden's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jayden's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jayden's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">rtt+nimble揭秘系列——内存策略（4）</h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-16T00:56:18+08:00">
+                2019-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%80%E5%BE%97%E4%B9%8B%E8%A7%81/" itemprop="url" rel="index">
+                    <span itemprop="name">一得之见</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/" class="leancloud_visitors" data-flag-title="rtt+nimble揭秘系列——内存策略（4）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>内存策略是每个协议栈的基石之一，所谓百尺高楼平地起，看看nimble的钢筋混凝土有没黑科技。</p>
+<span id="more"></span> 
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>理解不对的地方欢迎斧正。</p>
+<p>nimble的内存管理主要由以下文件组合实现:<code>queue.h</code>、<code>os_mempool.c</code>、<code>os_mempool.h</code>、<code>os_mbuf.c</code>、<code>os_mbuf.h</code>、<code>mem.c</code>、<code>mem.h</code>。</p>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><!-- TOC -->
+
+<ul>
+<li><a href="#1-queueh">1. queue.h</a><ul>
+<li><a href="#11-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8">1.1. 双向链表</a></li>
+<li><a href="#12-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8%E7%9A%84%E9%9C%80%E6%B1%82">1.2. 双向链表的需求</a></li>
+<li><a href="#13-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0">1.3. 双向链表的实现</a><ul>
+<li><a href="#131-freebsd%E7%9A%84tailq">1.3.1. FreeBSD的TAILQ</a></li>
+<li><a href="#132-linux%E7%9A%84list">1.3.2. linux的LIST</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-os_mempoolc--os_mempoolh">2. os_mempool.c &amp; os_mempool.h</a></li>
+<li><a href="#3-os_mbufc--os_mbufh">3. os_mbuf.c &amp; os_mbuf.h</a></li>
+<li><a href="#4-memc--memh">4. mem.c &amp; mem.h</a></li>
+<li><a href="#5-%E6%80%BB%E7%BB%93">5. 总结</a></li>
+<li><a href="#6-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">6. 参考资料</a></li>
+</ul>
+<!-- /TOC -->
+
+<h1 id="1-queue-h"><a href="#1-queue-h" class="headerlink" title="1. queue.h"></a>1. queue.h</h1><p>91年的伯克利队列，产自FreeBSD，上等轮子，收藏学习之。</p>
+<p>头文件包含5种队列的实现，而nimble用到三种，分别是<code>TAILQ</code>、<code>SLIST</code>、<code>STAILQ</code>。</p>
+<p>因为涉及经典的双向链表实现，所以有去翻资料专门学习，分享一下<code>双向链表</code>学习心得。</p>
+<h2 id="1-1-双向链表"><a href="#1-1-双向链表" class="headerlink" title="1.1. 双向链表"></a>1.1. 双向链表</h2><p>形如下图，元素之间可以双向追溯的链状结构，可称双向链表。</p>
+<p><img src="/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/double_link.svg"></p>
+<p>C编程常会自定义结构体，当希望将结构体串成如上图样式时，传统做法是把结构体嵌入链表元素中，下面介绍的是另外一种方式，将链表元素嵌入自定义结构体中，这时自定义结构体称为“宿主结构体”。</p>
+<h2 id="1-2-双向链表的需求"><a href="#1-2-双向链表的需求" class="headerlink" title="1.2. 双向链表的需求"></a>1.2. 双向链表的需求</h2><ul>
+<li>可将链表元素放进任意宿主结构体中</li>
+<li>方便用户访问宿主结构体中的成员</li>
+<li>支持链表基本操作（获取第一个链表元素、获取最后一个链表元素、插入元素、移除元素等）</li>
+</ul>
+<h2 id="1-3-双向链表的实现"><a href="#1-3-双向链表的实现" class="headerlink" title="1.3. 双向链表的实现"></a>1.3. 双向链表的实现</h2><p>分享两种应用得比较广泛的双向链表实现，源码分析请到参考资料章节，这里简单归纳总结。</p>
+<h3 id="1-3-1-FreeBSD的TAILQ"><a href="#1-3-1-FreeBSD的TAILQ" class="headerlink" title="1.3.1. FreeBSD的TAILQ"></a>1.3.1. FreeBSD的TAILQ</h3><p><img src="/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/tailq.jpg"></p>
+<ol>
+<li>访问宿主结构体方式：指针间接访问，无须计算过程</li>
+<li>二级指针：<ul>
+<li>因为next是宿主结构体的一级指针，而prev指向next，所以prev就是宿主结构的二级指针。</li>
+<li>若prev为宿主结构体的一级指针，则在删除&#x2F;添加element的时候，需要判断是否为第一个element，如果是则要将element的prev设置为NULL。</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-3-2-linux的LIST"><a href="#1-3-2-linux的LIST" class="headerlink" title="1.3.2. linux的LIST"></a>1.3.2. linux的LIST</h3><p><img src="/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/list.jpg"></p>
+<ol>
+<li>访问宿主结构体方式：每次访问都需计算container_of</li>
+<li>一级指针：代码清晰易懂</li>
+</ol>
+<h1 id="2-os-mempool-c-os-mempool-h"><a href="#2-os-mempool-c-os-mempool-h" class="headerlink" title="2. os_mempool.c &amp; os_mempool.h"></a>2. os_mempool.c &amp; os_mempool.h</h1><p><img src="/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/mempool.jpg"></p>
+<p>依赖关系：</p>
+<ul>
+<li>用<code>queue.h</code>中的宏定义串链表</li>
+</ul>
+<p>主要实现概念：</p>
+<ul>
+<li>一个mempool_head下挂着一条mempool链表</li>
+<li>每个mempool的memblock_head下挂着一条memblock链表</li>
+<li>每个mempool的info表明memblock链表的信息（block个数、block大小等）</li>
+</ul>
+<p>主要实现功能：</p>
+<ul>
+<li>os_mempool_init：往mempool链表插入一个新的mempool</li>
+<li>os_memblock_get：从mempool中获得一个block</li>
+<li>os_memblock_put：将block放回mempool中</li>
+</ul>
+<h1 id="3-os-mbuf-c-os-mbuf-h"><a href="#3-os-mbuf-c-os-mbuf-h" class="headerlink" title="3. os_mbuf.c &amp; os_mbuf.h"></a>3. os_mbuf.c &amp; os_mbuf.h</h1><p><img src="/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/membuf.jpg"></p>
+<p>依赖关系：</p>
+<ul>
+<li>用<code>queue.h</code>中的宏定义串链接</li>
+<li>用<code>mempool.h</code>中的mempoo对象</li>
+</ul>
+<p>主要实现概念：</p>
+<ul>
+<li>一个mbuf_pool_head下挂着一条mbuf_pool链表</li>
+<li>每个mbuf_pool包含一个mempool</li>
+<li>将memblock强制转化成mbuf+databuf</li>
+</ul>
+<p>主要实现功能：</p>
+<ul>
+<li>os_mbuf_get：获得一个mbuf（databuf不包含pkthdr）</li>
+<li>os_mbuf_get_pkthdr：获得一个mbuf（databuf包含pkthdr）</li>
+<li>os_mbuf_free：释放一个mbuf</li>
+<li>os_mbuf_append：往mbuf的databuf中添加用户数据，如果当前mbuf不够用，则申请一个新的mbuf添加，直到申请失败或者数据添加完成。</li>
+<li>os_mbuf_off：自指定mbuf的databuf中获得指定offset的地址，如果当前mbuf的databuf没有足够offset，则继续从next mbuf获得，直到next_mbuf &#x3D; NULL为止。</li>
+<li>os_mbuf_adj：裁剪mbuf的databuf，比如当前databuf有10个字节数据，需要从头裁剪12个数据，则会将当前databuf长度等于0，并且将下一个mbuf的databuf长度减2。</li>
+<li>os_mbuf_prepend：向前扩展指定大小的databuf内存空间，返回扩展后地址，如果leading space不够，则申请一个新的mbuf，将当前mbuf挂在新的mbuf后面。</li>
+<li>os_mbuf_extend：向后扩展指定大小的databuf内存空间，返回扩展后地址，如果trailing space不够，则申请一个新的mbuf，挂在mbuf当前mbuf后面。</li>
+<li>os_mbuf_pullup：从mbuf中获取能提供指定大小连续有效用户数据的mbuf。<ul>
+<li>如果当前mbuf足够多有效用户数据，则返回当前mbuf</li>
+<li>如果当前mbuf无足够有效用户数据，但存在下一个mbuf，则将下一个mbuf有效用户数据拷贝到当前mbuf有效用户数据后面，然后返回当前mbuf。</li>
+<li>如果当前mbuf无足够有效用户数据，也不存在下一个mbuf，则申请一个mbuf，将当前mbuf的用户数据拷贝到申请到的mbuf，然后返回申请的mbuf。</li>
+</ul>
+</li>
+<li>os_mbuf_trim_front：将指定mbuf链表的前面所有空mbuf移除掉。</li>
+</ul>
+<h1 id="4-mem-c-mem-h"><a href="#4-mem-c-mem-h" class="headerlink" title="4. mem.c &amp; mem.h"></a>4. mem.c &amp; mem.h</h1><p>主要实现功能：</p>
+<ul>
+<li>mem_malloc_mempool_gen：调用malloc获得内存，用于构造上述章节的数据结构。</li>
+<li>mem_split_frag：从mbuf中fragment出一包数据。</li>
+</ul>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ol>
+<li>queue：提供链表实现，用于构造内存池</li>
+<li>mempool：提供基础内存池的API，从内存池中获取&#x2F;释放内存块</li>
+<li>mbuf：提供负责内存块的API，根据实际要求修改内存块（增加帧头帧尾、添加数据等）</li>
+<li>mem：提供nimble中最高抽象的内存初始化</li>
+</ol>
+<h1 id="6-参考资料"><a href="#6-参考资料" class="headerlink" title="6. 参考资料"></a>6. 参考资料</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000019529307">TAILQ 队列之一二事</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/jackywgw/article/details/72626708">libevent 学习———-尾队列 tail queue</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/luotuo44/article/details/38374009">Libevent源码分析—–TAILQ_QUEUE队列</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.freebsdchina.org/forum/viewtopic.php?t=37913&start=0&sid=87c301d31cf20d05f2771fd4d4781182">freebsd内核代码中queue和list结构初探</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wanshilun/article/details/79747710">Linux内核中经典链表 list_head 常见使用方法解析</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/felove2013/articles/4050226.html">浅析长度为0的数组</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>“如果觉得还不错，请我喝杯咖啡吧~”</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Jayden Huang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/" title="rtt+nimble揭秘系列——内存策略（4）">https://jaydenh215.github.io/2019/10/16/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AD%96%E7%95%A5%EF%BC%884%EF%BC%89/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/rtthread/" rel="tag"># rtthread</a>
+          
+            <a href="/tags/nimble/" rel="tag"># nimble</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/09/%E6%B5%85%E8%B0%88BLE%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%92%8C%E6%95%B0%E6%8D%AE%E5%B8%A7/" rel="next" title="浅谈BLE核心架构和数据帧">
+                <i class="fa fa-chevron-left"></i> 浅谈BLE核心架构和数据帧
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/23/ADC%E7%9B%B8%E5%85%B3%E6%80%A7%E8%83%BD%E5%8F%82%E6%95%B0%E6%A6%82%E5%BF%B5/" rel="prev" title="ADC相关性能参数概念">
+                ADC相关性能参数概念 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)]; 
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:jaydenhuanggz@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-queue-h"><span class="nav-text">1. queue.h</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="nav-text">1.1. 双向链表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8%E7%9A%84%E9%9C%80%E6%B1%82"><span class="nav-text">1.2. 双向链表的需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">1.3. 双向链表的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-1-FreeBSD%E7%9A%84TAILQ"><span class="nav-text">1.3.1. FreeBSD的TAILQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-2-linux%E7%9A%84LIST"><span class="nav-text">1.3.2. linux的LIST</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-os-mempool-c-os-mempool-h"><span class="nav-text">2. os_mempool.c &amp; os_mempool.h</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-os-mbuf-c-os-mbuf-h"><span class="nav-text">3. os_mbuf.c &amp; os_mbuf.h</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-mem-c-mem-h"><span class="nav-text">4. mem.c &amp; mem.h</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-text">5. 总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">6. 参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+      <div class="wechat_channel">
+        <br>
+        <img src ="/images/wechat.png">
+      </div>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jayden Huang</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz',
+        appKey: 'ELsjbrq1xEPuSkAMz3v4vhge',
+        placeholder: 'Comment here ...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+        visitor: true,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz", "ELsjbrq1xEPuSkAMz3v4vhge");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

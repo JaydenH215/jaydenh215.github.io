@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="电路," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="基本功越扎实，心里才越踏实。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="电路基础——基本概念、定律和定理（0）">
+<meta property="og:url" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/index.html">
+<meta property="og:site_name" content="Jayden&#39;s Blog">
+<meta property="og:description" content="基本功越扎实，心里才越踏实。">
+<meta property="og:locale">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E7%94%B5%E8%8D%B7.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E7%94%B5%E6%B5%81.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E7%94%B5%E5%8E%8B.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E5%8A%9F%E7%8E%87.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E8%83%BD%E9%87%8F.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/KCL.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/KVL.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E8%8A%82%E7%82%B9%E5%88%86%E6%9E%90%E6%B3%95.png">
+<meta property="og:image" content="https://jaydenh215.github.io/%E7%BD%91%E5%AD%94%E5%88%86%E6%9E%90%E6%B3%95.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E7%94%B5%E6%BA%90%E5%8F%98%E6%8D%A2.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E6%AF%94%E4%BE%8B%E6%80%A7.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E5%8F%A0%E5%8A%A0%E6%80%A7.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E5%8F%A0%E5%8A%A0%E5%AE%9A%E7%90%86.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E6%88%B4%E7%BB%B4%E5%8D%97.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E8%AF%BA%E9%A1%BF.png">
+<meta property="article:published_time" content="2020-04-05T08:33:51.000Z">
+<meta property="article:modified_time" content="2025-02-15T08:13:09.272Z">
+<meta property="article:author" content="Jayden Huang">
+<meta property="article:tag" content="电路">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E7%94%B5%E8%8D%B7.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jaydenh215.github.io/2020/04/05/电路基础——基本概念、定律和定理（0）/"/>
+
+
+
+
+
+  <title>电路基础——基本概念、定律和定理（0） | Jayden's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jayden's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jayden's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">电路基础——基本概念、定律和定理（0）</h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-05T16:33:51+08:00">
+                2020-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%AF%E4%B8%9A%E4%B8%93%E6%94%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">术业专攻</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/" class="leancloud_visitors" data-flag-title="电路基础——基本概念、定律和定理（0）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>基本功越扎实，心里才越踏实。</p>
+<span id="more"></span> 
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这次学习的目标和原因：</p>
+<ol>
+<li>硬件是个人职业短板，需要突破。</li>
+<li>学的不扎实，知识碎片化，需要建立框架。</li>
+<li>能够分析围绕mcu的外围电路，比如各种电源电路。</li>
+</ol>
+<p>主要教材是<code>《电路基础（原书第6版）》作者: [美]Charles K.、Matthew N.O.Sadiku 著；段哲民、周巍、李宏 译</code>，网络资料辅助，还有一个数位板做笔记。</p>
+<p>学习方法是：理解概念、建立框架、跳过习题、具体问题具体分析。</p>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><!-- TOC -->
+
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">基本概念</a><ul>
+<li><a href="#%E7%94%B5%E8%8D%B7">电荷</a></li>
+<li><a href="#%E7%94%B5%E6%B5%81">电流</a></li>
+<li><a href="#%E7%94%B5%E5%8E%8B">电压</a></li>
+<li><a href="#%E5%8A%9F%E7%8E%87">功率</a></li>
+<li><a href="#%E8%83%BD%E9%87%8F">能量</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9A%E5%BE%8B%E5%8E%9F%E7%90%86%E6%96%B9%E6%B3%95%E5%AE%9A%E7%90%86">定律原理方法定理</a><ul>
+<li><a href="#%E5%85%AC%E7%90%86axiom">公理（axiom）</a></li>
+<li><a href="#%E5%AE%9A%E5%BE%8Blaw">定律（law）</a></li>
+<li><a href="#%E5%AE%9A%E7%90%86theorem">定理（theorem）</a></li>
+<li><a href="#%E5%8E%9F%E7%90%86principle">原理（principle）</a></li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E5%AE%9A%E5%BE%8B">基本定律</a><ul>
+<li><a href="#%E6%AC%A7%E5%A7%86%E5%AE%9A%E5%BE%8B">欧姆定律</a></li>
+<li><a href="#%E7%94%B5%E8%8D%B7%E5%AE%88%E6%81%92%E5%AE%9A%E5%BE%8Blaw-of-conservation-of-charge">电荷守恒定律（law of conservation of charge）</a></li>
+<li><a href="#%E5%9F%BA%E5%B0%94%E9%9C%8D%E5%A4%AB%E7%94%B5%E6%B5%81%E5%AE%9A%E5%BE%8Bkcl">基尔霍夫电流定律（KCL）</a></li>
+<li><a href="#%E8%83%BD%E9%87%8F%E5%AE%88%E6%81%92%E5%AE%9A%E5%BE%8Blaw-of-conservation-of-energy">能量守恒定律（law of conservation of energy）</a></li>
+<li><a href="#%E5%9F%BA%E5%B0%94%E9%9C%8D%E5%A4%AB%E7%94%B5%E5%8E%8B%E5%AE%9A%E5%BE%8Bkvl">基尔霍夫电压定律（KVL）</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86">基本原理</a><ul>
+<li><a href="#%E5%88%86%E5%8E%8B%E5%8E%9F%E7%90%86principle-of-voltage-division">分压原理（principle of voltage division）</a></li>
+<li><a href="#%E5%88%86%E6%B5%81%E5%8E%9F%E7%90%86principle-of-current-division">分流原理（principle of current division）</a></li>
+</ul>
+</li>
+<li><a href="#%E7%94%B5%E8%B7%AF%E7%94%B5%E9%87%8F%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95">电路电量分析方法</a></li>
+<li><a href="#%E7%94%B5%E8%B7%AF%E5%AE%9A%E7%90%86">电路定理</a><ul>
+<li><a href="#%E5%8F%A0%E5%8A%A0%E5%AE%9A%E7%90%86superposition-theorem">叠加定理（superposition theorem）</a></li>
+<li><a href="#%E6%88%B4%E7%BB%B4%E5%8D%97%E5%AE%9A%E7%90%86thevenins-theorem">戴维南定理（Thevenin’s theorem）</a></li>
+<li><a href="#%E8%AF%BA%E9%A1%BF%E5%AE%9A%E7%90%86nortons-theorem">诺顿定理（Norton’s theorem）</a></li>
+<li><a href="#%E6%B1%82%E6%88%B4%E7%BB%B4%E5%8D%97%E8%AF%BA%E9%A1%BF%E7%AD%89%E6%95%88%E7%94%B5%E8%B7%AF">求戴维南&#x2F;诺顿等效电路</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+<!-- /TOC -->
+
+
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>我们研究的是电路，这里面的各种被研究的量，我们称为“电量”，具体有以下5个基本电量概念。</p>
+<h2 id="电荷"><a href="#电荷" class="headerlink" title="电荷"></a>电荷</h2><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E7%94%B5%E8%8D%B7.png"></p>
+<p>电荷是构成物质的原子的一种电气特性，单位是库伦（C）。原子由原子核和电子组成。电子所带的电荷e是负的，其电荷量为1.602*10^-19C。</p>
+<h2 id="电流"><a href="#电流" class="headerlink" title="电流"></a>电流</h2><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E7%94%B5%E6%B5%81.png"></p>
+<p>电流是指电荷的时间变化率，单位为安培（A）。1A即表示：给定一点（该点可以是端点、元件、横截面），单位时间(即1秒）流过该点的电荷多少。</p>
+<h2 id="电压"><a href="#电压" class="headerlink" title="电压"></a>电压</h2><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E7%94%B5%E5%8E%8B.png"></p>
+<p>电压是指移动单位电荷通过某个元件所需的能量，单位是伏特（V）。U<sub>ab</sub> &#x3D; 1V即表示：给定两点a、b，将单位电荷（即1库存电荷）的电子从b点移动到a点所需要的能量，也可以说是指将单位电荷的质子从a点移动到b点所需的能量。</p>
+<h2 id="功率"><a href="#功率" class="headerlink" title="功率"></a>功率</h2><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E5%8A%9F%E7%8E%87.png"></p>
+<p>功率是消耗或吸收能量的时间变化率，单位是瓦特（W）。1W即表示：N电荷量的电子在1秒内从b点移动到a点所需要的能量是1J。</p>
+<h2 id="能量"><a href="#能量" class="headerlink" title="能量"></a>能量</h2><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E8%83%BD%E9%87%8F.png"></p>
+<p>能量是指做功的能力，单位为焦耳（J）。电力公司以瓦特·小时（W·h）为单位度量能量，其中：1W·h &#x3D; 3600J。1J即表示：看成是某种量，不懂能量是什么。</p>
+<h1 id="定律原理方法定理"><a href="#定律原理方法定理" class="headerlink" title="定律原理方法定理"></a>定律原理方法定理</h1><h2 id="公理（axiom）"><a href="#公理（axiom）" class="headerlink" title="公理（axiom）"></a>公理（axiom）</h2><p>是经过受逻辑限制的证明为真的陈述（一般在数学中，只有重要或有趣的陈述才叫定理）。最终不用再解释的基础。这个基础被认为是显而易见的，不言自明的。</p>
+<h2 id="定律（law）"><a href="#定律（law）" class="headerlink" title="定律（law）"></a>定律（law）</h2><p>是由不变的事实规律所归纳出的结论，是对客观事实的一种表达形式，是通过大量具体的客观事实经验累积归纳而成的结论。</p>
+<h2 id="定理（theorem）"><a href="#定理（theorem）" class="headerlink" title="定理（theorem）"></a>定理（theorem）</h2><p>由公理，原理，定律经过数学推导得出的结论。基于公理，可以推倒出方便使用的定理。</p>
+<h2 id="原理（principle）"><a href="#原理（principle）" class="headerlink" title="原理（principle）"></a>原理（principle）</h2><p>既可以表示law or rule，又可以表示theory，应该不是一个正式的科学术语。</p>
+<h2 id="基本定律"><a href="#基本定律" class="headerlink" title="基本定律"></a>基本定律</h2><h3 id="欧姆定律"><a href="#欧姆定律" class="headerlink" title="欧姆定律"></a>欧姆定律</h3><p>材料阻碍电流的能力称为“电阻”。电阻两端的电压v与流过该电阻的电流i成正比。</p>
+<h3 id="电荷守恒定律（law-of-conservation-of-charge）"><a href="#电荷守恒定律（law-of-conservation-of-charge）" class="headerlink" title="电荷守恒定律（law of conservation of charge）"></a>电荷守恒定律（law of conservation of charge）</h3><p>电荷既不能被创造，也不能被消灭，只能转移。因此一个系统中电荷量的代数和是不变的。</p>
+<h3 id="基尔霍夫电流定律（KCL）"><a href="#基尔霍夫电流定律（KCL）" class="headerlink" title="基尔霍夫电流定律（KCL）"></a>基尔霍夫电流定律（KCL）</h3><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/KCL.png"></p>
+<p>流入任一节点(或任一闭合界面)的电流代数和为零。<br>基尔霍夫电流定律是基于电荷守恒定律。</p>
+<h3 id="能量守恒定律（law-of-conservation-of-energy）"><a href="#能量守恒定律（law-of-conservation-of-energy）" class="headerlink" title="能量守恒定律（law of conservation of energy）"></a>能量守恒定律（law of conservation of energy）</h3><p>任何时刻电路中功率的代数和必须为零。</p>
+<h3 id="基尔霍夫电压定律（KVL）"><a href="#基尔霍夫电压定律（KVL）" class="headerlink" title="基尔霍夫电压定律（KVL）"></a>基尔霍夫电压定律（KVL）</h3><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/KVL.png"></p>
+<p>任何闭合类路径（或回路）上全部电压的代数和为零。</p>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><h3 id="分压原理（principle-of-voltage-division）"><a href="#分压原理（principle-of-voltage-division）" class="headerlink" title="分压原理（principle of voltage division）"></a>分压原理（principle of voltage division）</h3><p>串联电阻，电源电压在各电阻之间的电压分配与各电阻的阻值成正比，电阻值越大，电阻上的电压越大。</p>
+<h3 id="分流原理（principle-of-current-division）"><a href="#分流原理（principle-of-current-division）" class="headerlink" title="分流原理（principle of current division）"></a>分流原理（principle of current division）</h3><p>并联电阻，总电流被多个支路分享，且支路电流与电阻值成反比，较小电阻的支路流过较大的电流。</p>
+<h2 id="电路电量分析方法"><a href="#电路电量分析方法" class="headerlink" title="电路电量分析方法"></a>电路电量分析方法</h2><ul>
+<li>节点分析法</li>
+</ul>
+<p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E8%8A%82%E7%82%B9%E5%88%86%E6%9E%90%E6%B3%95.png"></p>
+<p>如果要分析包含晶体管电路，需要先画出等效电路才能用节点分析法。因为晶体管各点电位不一样，所以不能用节点分析法。</p>
+<ul>
+<li>网孔分析法</li>
+</ul>
+<p><img src="/%E7%BD%91%E5%AD%94%E5%88%86%E6%9E%90%E6%B3%95.png"></p>
+<p>用于直接分析包含晶体管的电路，可以直接使用网孔分析卡。</p>
+<ul>
+<li>应用叠加定理</li>
+</ul>
+<p>优点是分析时简化电路，缺点是计算步骤多了。可用于三极管交直流信号分析。</p>
+<ul>
+<li>电源变换</li>
+</ul>
+<p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E7%94%B5%E6%BA%90%E5%8F%98%E6%8D%A2.png"></p>
+<p>基础是等效的概念，等效电路是指与原电路具有相同的u-i特性的电路。通过电源变换将戴维南定理和诺顿定理关联起来。</p>
+<h2 id="电路定理"><a href="#电路定理" class="headerlink" title="电路定理"></a>电路定理</h2><ul>
+<li>线性电路</li>
+</ul>
+<p>下面介绍的两个定理仅适用于线性（liner）电路，线性电路含有比例性和叠加性。</p>
+<p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E6%AF%94%E4%BE%8B%E6%80%A7.png"></p>
+<p>比例性是指：如果输入（也称为激励）乘以一个常数，那么输出（也称为响应）也相应第乘以同一个常数。如电阻的电压和电流关系。</p>
+<p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E5%8F%A0%E5%8A%A0%E6%80%A7.png"></p>
+<p>叠加性是指：各个输入之和的响应等于每个输入单独作用于系统时的响应之和。如电阻的电压和电流关系。</p>
+<h3 id="叠加定理（superposition-theorem）"><a href="#叠加定理（superposition-theorem）" class="headerlink" title="叠加定理（superposition theorem）"></a>叠加定理（superposition theorem）</h3><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E5%8F%A0%E5%8A%A0%E5%AE%9A%E7%90%86.png"></p>
+<p>线性电路是叠加定理的基础。线性电路中元件两端电压（或流经元件的电流）是每个独立源单独作用下在该元件两端产生的电压（或流经元件的电流）的代数和。</p>
+<h3 id="戴维南定理（Thevenin’s-theorem）"><a href="#戴维南定理（Thevenin’s-theorem）" class="headerlink" title="戴维南定理（Thevenin’s theorem）"></a>戴维南定理（Thevenin’s theorem）</h3><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E6%88%B4%E7%BB%B4%E5%8D%97.png"></p>
+<p>戴维南定理是指：线性二端电路可以用一个由电压源V<sub>Th</sub>和与之串联的电阻R<sub>Th</sub>组成的等效电路所替代，其中V<sub>Th</sub>为端口的开路电压，R<sub>Th</sub>为独立源关闭时端口的输入（或等效）电阻。</p>
+<h3 id="诺顿定理（Norton’s-theorem）"><a href="#诺顿定理（Norton’s-theorem）" class="headerlink" title="诺顿定理（Norton’s theorem）"></a>诺顿定理（Norton’s theorem）</h3><p><img src="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/%E8%AF%BA%E9%A1%BF.png"></p>
+<p>诺顿定理是指：线性二端电路可以由电流源I<sub>N</sub>和与之并联的电阻R<sub>N</sub>构成的等效电路替代，其中I<sub>N</sub>为流过端口的短路电流，R<sub>N</sub>为独立电流源关闭时端口的输入电阻（或等效）电阻。</p>
+<h3 id="求戴维南-诺顿等效电路"><a href="#求戴维南-诺顿等效电路" class="headerlink" title="求戴维南&#x2F;诺顿等效电路"></a>求戴维南&#x2F;诺顿等效电路</h3><ol>
+<li>求a-b两端的开路电压u或者短路电流i</li>
+<li>所有独立源关闭时，a-b两端的输入电阻r</li>
+</ol>
+<p>即通过开路测试和短路测试，就足以求出至少包含一个独立源电路的戴维南等效电路或诺顿等效电路。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/52506376">公理，原理，定律，定理的区别与关系——现代科学的基础</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20222198">怎么区分和理解定理、定律、理论、概念、效应、规则、原理？</a></p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>“如果觉得还不错，请我喝杯咖啡吧~”</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Jayden Huang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/" title="电路基础——基本概念、定律和定理（0）">https://jaydenh215.github.io/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%94%B5%E8%B7%AF/" rel="tag"># 电路</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/" rel="next" title="浅谈BLE吞吐量">
+                <i class="fa fa-chevron-left"></i> 浅谈BLE吞吐量
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/01/%E6%B5%85%E8%B0%88BLE%E5%9C%B0%E5%9D%80%E3%80%81%E9%9A%90%E7%A7%81%E6%9C%BA%E5%88%B6%E3%80%81%E7%99%BD%E5%90%8D%E5%8D%95%E3%80%81%E5%AE%9A%E5%90%91%E5%B9%BF%E6%92%AD/" rel="prev" title="浅谈BLE地址、隐私机制、白名单、定向广播">
+                浅谈BLE地址、隐私机制、白名单、定向广播 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)]; 
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:jaydenhuanggz@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%8D%B7"><span class="nav-text">电荷</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E6%B5%81"><span class="nav-text">电流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E5%8E%8B"><span class="nav-text">电压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%9F%E7%8E%87"><span class="nav-text">功率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%BD%E9%87%8F"><span class="nav-text">能量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E5%BE%8B%E5%8E%9F%E7%90%86%E6%96%B9%E6%B3%95%E5%AE%9A%E7%90%86"><span class="nav-text">定律原理方法定理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AC%E7%90%86%EF%BC%88axiom%EF%BC%89"><span class="nav-text">公理（axiom）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E5%BE%8B%EF%BC%88law%EF%BC%89"><span class="nav-text">定律（law）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%EF%BC%88theorem%EF%BC%89"><span class="nav-text">定理（theorem）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%EF%BC%88principle%EF%BC%89"><span class="nav-text">原理（principle）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%AE%9A%E5%BE%8B"><span class="nav-text">基本定律</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A7%E5%A7%86%E5%AE%9A%E5%BE%8B"><span class="nav-text">欧姆定律</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E8%8D%B7%E5%AE%88%E6%81%92%E5%AE%9A%E5%BE%8B%EF%BC%88law-of-conservation-of-charge%EF%BC%89"><span class="nav-text">电荷守恒定律（law of conservation of charge）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E5%B0%94%E9%9C%8D%E5%A4%AB%E7%94%B5%E6%B5%81%E5%AE%9A%E5%BE%8B%EF%BC%88KCL%EF%BC%89"><span class="nav-text">基尔霍夫电流定律（KCL）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E9%87%8F%E5%AE%88%E6%81%92%E5%AE%9A%E5%BE%8B%EF%BC%88law-of-conservation-of-energy%EF%BC%89"><span class="nav-text">能量守恒定律（law of conservation of energy）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E5%B0%94%E9%9C%8D%E5%A4%AB%E7%94%B5%E5%8E%8B%E5%AE%9A%E5%BE%8B%EF%BC%88KVL%EF%BC%89"><span class="nav-text">基尔霍夫电压定律（KVL）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-text">基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8E%8B%E5%8E%9F%E7%90%86%EF%BC%88principle-of-voltage-division%EF%BC%89"><span class="nav-text">分压原理（principle of voltage division）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%B5%81%E5%8E%9F%E7%90%86%EF%BC%88principle-of-current-division%EF%BC%89"><span class="nav-text">分流原理（principle of current division）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E7%94%B5%E9%87%8F%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="nav-text">电路电量分析方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E5%AE%9A%E7%90%86"><span class="nav-text">电路定理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%A0%E5%8A%A0%E5%AE%9A%E7%90%86%EF%BC%88superposition-theorem%EF%BC%89"><span class="nav-text">叠加定理（superposition theorem）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%B4%E7%BB%B4%E5%8D%97%E5%AE%9A%E7%90%86%EF%BC%88Thevenin%E2%80%99s-theorem%EF%BC%89"><span class="nav-text">戴维南定理（Thevenin’s theorem）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BA%E9%A1%BF%E5%AE%9A%E7%90%86%EF%BC%88Norton%E2%80%99s-theorem%EF%BC%89"><span class="nav-text">诺顿定理（Norton’s theorem）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%82%E6%88%B4%E7%BB%B4%E5%8D%97-%E8%AF%BA%E9%A1%BF%E7%AD%89%E6%95%88%E7%94%B5%E8%B7%AF"><span class="nav-text">求戴维南&#x2F;诺顿等效电路</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+      <div class="wechat_channel">
+        <br>
+        <img src ="/images/wechat.png">
+      </div>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jayden Huang</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz',
+        appKey: 'ELsjbrq1xEPuSkAMz3v4vhge',
+        placeholder: 'Comment here ...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+        visitor: true,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz", "ELsjbrq1xEPuSkAMz3v4vhge");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ble," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="怎样才能提高BLE吞吐量？一文读懂BLE的吞吐量。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈BLE吞吐量">
+<meta property="og:url" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/index.html">
+<meta property="og:site_name" content="Jayden&#39;s Blog">
+<meta property="og:description" content="怎样才能提高BLE吞吐量？一文读懂BLE的吞吐量。">
+<meta property="og:locale">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/arch.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/gatt_att_mtu.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/gatt_l2cap_config_param.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/write_command.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/notification.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/b_frame.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/l2cap_sdu_segmentation.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/l2cap_fragmentation.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/LLID.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble40_ll_pkt.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble40_ll_data_pdu.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble50_ll_pkt.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble50_ll_data_pdu.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble_ll.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/phy.png">
+<meta property="article:published_time" content="2020-01-02T10:28:06.000Z">
+<meta property="article:modified_time" content="2025-02-15T08:13:09.266Z">
+<meta property="article:author" content="Jayden Huang">
+<meta property="article:tag" content="ble">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/arch.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jaydenh215.github.io/2020/01/02/浅谈BLE吞吐量/"/>
+
+
+
+
+
+  <title>浅谈BLE吞吐量 | Jayden's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jayden's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jayden's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">浅谈BLE吞吐量</h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-02T18:28:06+08:00">
+                2020-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%AF%E4%B8%9A%E4%B8%93%E6%94%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">术业专攻</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/" class="leancloud_visitors" data-flag-title="浅谈BLE吞吐量">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>怎样才能提高BLE吞吐量？一文读懂BLE的吞吐量。</p>
+<span id="more"></span> 
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>减少连接间隔是唯一提高BLE传输速率方法吗？ATT_MTU会影响传输速率吗？长包指的是什么？这篇文章就是解答这些问题的，有不对的地方，欢迎斧正。</p>
+<p>由于影响吞吐量的因素有许多，而篇幅有限，以下条件先不考虑：</p>
+<ol>
+<li>加密数据包</li>
+</ol>
+<p>加密数据包会影响LL PDU的长度。</p>
+<ol start="2">
+<li>att protocol以外的l2cap channel</li>
+</ol>
+<p>比如smp这种对吞吐量没有需求的channel就不考虑。</p>
+<ol start="3">
+<li>link layer丢包重发</li>
+</ol>
+<p>同一个LL packet发多遍当然会影响吞吐量，这里假设射频环境很好，不会有这个影响。</p>
+<ol start="4">
+<li>le coded phy</li>
+</ol>
+<p>只考虑1M和2M</p>
+<ol start="5">
+<li>cpu处理速度的影响</li>
+</ol>
+<p>假设cpu处理速度足够快，不会被其他中断影响协议栈的行为。</p>
+<ol start="6">
+<li>hci通讯接口的吞吐量限制</li>
+</ol>
+<p>hci接口有uart&#x2F;spi&#x2F;ram等多种通讯方式，不同通讯方式本身也会有速率限制，这里不考虑这个限制。</p>
+<ol start="7">
+<li>多链路</li>
+</ol>
+<p>多链路分时复用radio，吞吐量会被降低，这里只考虑单链路情况。</p>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><!-- TOC -->
+
+<ul>
+<li><a href="#1-ble%E5%8D%8F%E8%AE%AE%E6%A0%88%E6%A1%86%E6%9E%B6">1. BLE协议栈框架</a></li>
+<li><a href="#2-gatt">2. GATT</a></li>
+<li><a href="#3-att-protocol">3. ATT PROTOCOL</a><ul>
+<li><a href="#31-write-command-format">3.1. Write Command format</a></li>
+<li><a href="#32-handle-value-notification-format">3.2. Handle Value Notification format</a></li>
+<li><a href="#33-att_mtu%E7%9A%84%E5%AE%9A%E4%B9%89">3.3. ATT_MTU的定义</a></li>
+</ul>
+</li>
+<li><a href="#4-l2cap-spec">4. L2CAP SPEC</a><ul>
+<li><a href="#41-sduservice-data-unit">4.1. SDU(Service Data Unit)</a></li>
+<li><a href="#42-b-frame">4.2. B-frame</a></li>
+<li><a href="#43-mtumaximum-transmission-unit-min-23">4.3. MTU(Maximum Transmission Unit), min 23</a></li>
+<li><a href="#44-mpsmaximum-pdu-payload-size-max-65535">4.4. MPS(Maximum PDU payload Size), max 65535</a></li>
+<li><a href="#45-segmentation-and-reassembly">4.5. Segmentation and Reassembly</a></li>
+<li><a href="#46-fragmentation-and-recombination">4.6. Fragmentation and Recombination</a></li>
+</ul>
+</li>
+<li><a href="#5-link-layer">5. LINK LAYER</a><ul>
+<li><a href="#51-link-layer-packet">5.1. Link layer packet</a><ul>
+<li><a href="#511-ble40">5.1.1. ble4.0</a></li>
+<li><a href="#512-ble42">5.1.2. ble4.2</a></li>
+</ul>
+</li>
+<li><a href="#52-ble%E8%BF%9E%E6%8E%A5%E4%BC%A0%E8%BE%93%E5%8E%9F%E7%90%86%E8%AF%B4%E6%98%8E">5.2. BLE连接传输原理说明</a></li>
+</ul>
+</li>
+<li><a href="#6-phy-layer">6. PHY LAYER</a><ul>
+<li><a href="#1m-phy%E5%92%8C2m-phy%E7%9A%84%E5%B7%AE%E5%BC%82">1M PHY和2M PHY的差异</a></li>
+</ul>
+</li>
+<li><a href="#7-%E6%80%BB%E7%BB%93">7. 总结</a></li>
+<li><a href="#8-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">8. 参考资料</a></li>
+</ul>
+<!-- /TOC -->
+
+<h1 id="1-BLE协议栈框架"><a href="#1-BLE协议栈框架" class="headerlink" title="1. BLE协议栈框架"></a>1. BLE协议栈框架</h1><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/arch.png"></p>
+<p>手机下传write without repsonse的一个procedure数据流向：</p>
+<pre><code>gatt(client) -&gt; l2cap -&gt; hci(option) -&gt; link layer -&gt; phy -&gt; phy -&gt; link layer -&gt; hci(option) -&gt; l2cap -&gt; gatt(server)
+</code></pre>
+<p>设备上传notication的一个procedure数据流向：</p>
+<pre><code>gatt(server) -&gt; l2cap -&gt; hci(option) -&gt; link layer -&gt; phy -&gt; phy -&gt; link layer -&gt; hci(option) -&gt; l2cap -&gt; gatt(client)
+</code></pre>
+<h1 id="2-GATT"><a href="#2-GATT" class="headerlink" title="2. GATT"></a>2. GATT</h1><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/gatt_att_mtu.png"></p>
+<p>gatt规定ATT_MTU默认支持不能小于23。ATT_MTU理论最大65535（因为MTU Exchange Request里面表示ATT_MTU大小的MTU size field只有2个字节）。</p>
+<p>但是在BLUETOOTH SPECIFICATION Version 5.0 | Vol 3, Part F 3.2.9 Long Attribute Values有这么一句话：The maximum length of an attribute value shall be 512 octets。</p>
+<p>所以是规范已经限制了attribute value只有512字节？如果是这样的话，那么再大的ATT_MTU其实也没有意义。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">nimble关于attribute value和ATT_MTU部分的代码：</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BLE_ATT_ATTR_MAX_LEN                512</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * An ATT MTU of 527 allows the largest ATT command (signed write) to contain a</span></span><br><span class="line"><span class="comment"> * 512-byte attribute value.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BLE_ATT_MTU_MAX                     527</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>ATT_MTU = 512，attr value length = 512，刚好一包一个notification
+ATT_MTU = 527, attr value length = 512, 刚好一包一个signed write contain a 512-byte attr value
+ATT_MTU = 64,  attr value length = 512，发N包prepare write request和一包excute write request
+</code></pre>
+<p>gatt要求l2cap channel默认配置参数如下：</p>
+<p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/gatt_l2cap_config_param.png"></p>
+<p>表格中MTU是一个默认值，表示此时此刻att protocol channel的L2CAP payload支持的最大传输单元是23字节，但并不代表local设备最大接收能力。连接之后可以通过exchange mtu procedure来更新ATT_MTU，所以协商ATT_MTU过程相当于协商MTU的过程，与BR&#x2F;EDR的差异是BR&#x2F;EDR通过l2cap channel configuration procedure来配置MTU，而不是exchange mtu procedure。</p>
+<h1 id="3-ATT-PROTOCOL"><a href="#3-ATT-PROTOCOL" class="headerlink" title="3. ATT PROTOCOL"></a>3. ATT PROTOCOL</h1><h2 id="3-1-Write-Command-format"><a href="#3-1-Write-Command-format" class="headerlink" title="3.1. Write Command format"></a>3.1. Write Command format</h2><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/write_command.png"></p>
+<p>用于gatt的write without response。</p>
+<h2 id="3-2-Handle-Value-Notification-format"><a href="#3-2-Handle-Value-Notification-format" class="headerlink" title="3.2. Handle Value Notification format"></a>3.2. Handle Value Notification format</h2><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/notification.png"></p>
+<p>用于gatt的notifications。</p>
+<h2 id="3-3-ATT-MTU的定义"><a href="#3-3-ATT-MTU的定义" class="headerlink" title="3.3. ATT_MTU的定义"></a>3.3. ATT_MTU的定义</h2><p>ATT_MTU is defined as the maximum size of any packet sent between a client and a server. A higher layer specification defines the default ATT_MTU value. ATT_MTU is a negotiated value.</p>
+<blockquote>
+<p>连接之后，client可以向server发起mtu exchange procedure，即client告诉server自己的最大接收能力ATT_MTU（client’s local att protocol channel MTU），server也会告诉client自己的最大接收能力ATT_MTU（server’s local att protocol channel MTU），最后取两者的最小值为这条通道的ATT_MTU（actual att protocol channel MTU）。</p>
+</blockquote>
+<h1 id="4-L2CAP-SPEC"><a href="#4-L2CAP-SPEC" class="headerlink" title="4. L2CAP SPEC"></a>4. L2CAP SPEC</h1><h2 id="4-1-SDU-Service-Data-Unit"><a href="#4-1-SDU-Service-Data-Unit" class="headerlink" title="4.1. SDU(Service Data Unit)"></a>4.1. SDU(Service Data Unit)</h2><p>来自上层的数据，不包含任何l2cap的信息，这里为ATT的消息。</p>
+<h2 id="4-2-B-frame"><a href="#4-2-B-frame" class="headerlink" title="4.2. B-frame"></a>4.2. B-frame</h2><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/b_frame.png"></p>
+<p>ATT PROTOCOL的数据就放在b-frame的information payload中，Length field占2个字节，所以理论payload最大只有65535字节，因为受芯片的ram大小限制，实际实现还会再小一点，通过MTU具体实现表现出来。</p>
+<h2 id="4-3-MTU-Maximum-Transmission-Unit-min-23"><a href="#4-3-MTU-Maximum-Transmission-Unit-min-23" class="headerlink" title="4.3. MTU(Maximum Transmission Unit), min 23"></a>4.3. MTU(Maximum Transmission Unit), min 23</h2><p>MTU is not a negotiated value, it is an informational parameter that each device can specify independently and indicates to the remote device that the local device can receive, in this channel, an MTU larger than the minimum required.</p>
+<p>l2cap MTU表示每条l2cap channel的最大接收能力，不是一个协商值。</p>
+<p>当l2cap channel是att protocol channel的时候，协议栈实现如下：</p>
+<p>比如说，local设备的local att protocol channel MTU最大能支持到2048字节，但是peer设备的local att protocol channel MTU只能支持到23字节，经过gatt的mtu exchange procedure之后，取两者的最小值23为这条通道的ATT_MTU（即actual att protocol MTU）。尽管这时候att protocol作了长度限制不能超过23字节，但是peer设备要是发送了非法长度数据，att protocol本身是没有机制去检测出来的。所以在mtu exchange procedure之后协议栈实现就需要将local设备的att protocol channel MTU更新为23，那么当local设备收到一包att protocol消息之后，在l2cap层就可以判定该数据包是合法长度的数据了。</p>
+<p>所以att protocol channel MTU也常常被误认为是ATT_MTU，但他们还是有点区别的。</p>
+<h2 id="4-4-MPS-Maximum-PDU-payload-Size-max-65535"><a href="#4-4-MPS-Maximum-PDU-payload-Size-max-65535" class="headerlink" title="4.4. MPS(Maximum PDU payload Size), max 65535"></a>4.4. MPS(Maximum PDU payload Size), max 65535</h2><p>规范规定在Basic L2CAP mode的B-frame的MPS等于MTU。</p>
+<p>Note: In the absence of segmentation, or in the Basic L2CAP Mode, the Maximum Transmission Unit is the equivalent to the Maximum PDU payload Size and shall be made equal in the configuration parameters.</p>
+<h2 id="4-5-Segmentation-and-Reassembly"><a href="#4-5-Segmentation-and-Reassembly" class="headerlink" title="4.5. Segmentation and Reassembly"></a>4.5. Segmentation and Reassembly</h2><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/l2cap_sdu_segmentation.png"></p>
+<p>当MPS小于MTU的时候，需要segmentation；但是对于ATT消息, MPS总是等于ATT_MTU，所以ATT消息从不需要segmented，但是可能会因为链路层限制而需要fragmented。</p>
+<p>经典蓝牙某些场合可能需要用到segmented，不太清楚。</p>
+<h2 id="4-6-Fragmentation-and-Recombination"><a href="#4-6-Fragmentation-and-Recombination" class="headerlink" title="4.6. Fragmentation and Recombination"></a>4.6. Fragmentation and Recombination</h2><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/l2cap_fragmentation.png"></p>
+<p>由于链路层的接收限制，l2cap的帧有时候需要拆开发送，用链路层包头的LLID来负责标识拆包和重组。</p>
+<p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/LLID.png"></p>
+<p>下面看两个例子。</p>
+<p>如果BLE4.0，ATT_MTU最后client和server协商出来结果是23，那么发送20字节（ATT_payload）不需要拆包：</p>
+<pre><code>1字节前导码 + 4字节访问地址 + 2字节链路帧头（其中LLID = 10b，表示一个没有fragmentation的完整包） + 4字节L2CAP帧头 + 3字节ATT帧头 + 20字节的ATT_payload + 3字节CRC
+</code></pre>
+<p>如果BLE4.0，ATT_MTU最后client和server协商出来假设是63，那么你发送60字节数据（ATT_payload），L2CAP会将它拆成3包（拆包的原因是因为BLE4.0链路层PDU的限制），最终从空中发出去的包长这样：</p>
+<pre><code>1）1字节前导码 + 4字节访问地址 + 2字节链路帧头（其中LLID = 10b，表示这是第一个连续包） + 4字节L2CAP帧头 + 3字节ATT帧头 + 20字节的ATT_payload + 3字节CRC
+2）1字节前导码 + 4字节访问地址 + 2字节链路帧头（其中LLID = 01b，表示这是下一包连续包） + 27字节的ATT_payload + 3字节CRC
+3）1字节前导码 + 4字节访问地址 + 2字节链路帧头（其中LLID = 01b，表示这是最后一个连续包） + 13字节的ATT_payload + 3字节CRC
+</code></pre>
+<p>上面10b、01b中的“b”表示二进制格式，中间的包和最后的包的LLID都是01b，对方怎么知道什么时候收完包呢？靠的是第一包的4字节L2CAP帧头，这里面会说明后面一共有多少数据待接收。</p>
+<h1 id="5-LINK-LAYER"><a href="#5-LINK-LAYER" class="headerlink" title="5. LINK LAYER"></a>5. LINK LAYER</h1><h2 id="5-1-Link-layer-packet"><a href="#5-1-Link-layer-packet" class="headerlink" title="5.1. Link layer packet"></a>5.1. Link layer packet</h2><h3 id="5-1-1-ble4-0"><a href="#5-1-1-ble4-0" class="headerlink" title="5.1.1. ble4.0"></a>5.1.1. ble4.0</h3><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble40_ll_pkt.png"></p>
+<p>可以看到LL PDU的长度最大为39字节，LL PDU又分为两种：一种是ADV PDU广播通道包，最大长度为39个字节；另一种是DATA PDU数据通道包，最大为33字节，后者是连接之后通讯的数据包。</p>
+<p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble40_ll_data_pdu.png"></p>
+<p>展开DATA PDU，前2个字节为帧头，后4个字节为MIC（用于加密），就算不加密这4个字节也不能用于传输上层数据，即payload最多能容纳27字节的上层数据（上层指的是l2cap层）。</p>
+<blockquote>
+<p>The Length field of the Header indicates the length of the Payload and MIC if included. The length field has the range of 0 to 31 octets. The Payload field shall be less than or equal to 27 octets in length. The MIC is 4 octets in length.</p>
+</blockquote>
+<h3 id="5-1-2-ble4-2"><a href="#5-1-2-ble4-2" class="headerlink" title="5.1.2. ble4.2"></a>5.1.2. ble4.2</h3><p>后来因为27字节payload实在太少了，所以在ble4.2引入了新的特性，即LE data length extension（数据长度扩展，业内也叫长包）。</p>
+<p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble50_ll_pkt.png"></p>
+<p>可以看到LL PDU的长度最大为257字节，LL PDU又分为两种：一种是ADV PDU广播通道包，最大长度为257个字节；另一种是DATA PDU数据通道包，最大为257字节，后者是连接之后通讯的数据包。</p>
+<p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble50_ll_data_pdu.png"></p>
+<p>展开DATA PDU，前2个字节为帧头，后4个字节为MIC（用于加密），就算不加密这4个字节也不能用于传输上层数据，即payload最多能容纳251字节的上层数据（上层指的是l2cap层）。</p>
+<blockquote>
+<p>The Length field of the Header indicates the length of the Payload and MIC if included. The length field has the range of 0 to 255 octets. The Payload field shall be less than or equal to 251 octets in length. The MIC is 4 octets in length</p>
+</blockquote>
+<h2 id="5-2-BLE连接传输原理说明"><a href="#5-2-BLE连接传输原理说明" class="headerlink" title="5.2. BLE连接传输原理说明"></a>5.2. BLE连接传输原理说明</h2><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/ble_ll.png"></p>
+<p>上图为 BLE 连接传输的一个例子，其中每个 Connection Event 包含 6 个主机和 6 个从机的 Link Layer Packet，一个 Connection Interval 只有一个 Connection Event；如果每个 Link Layer Pakcet 限制最多包含 20 字节用户数据，那么上图例子中每次 Connection Interval， BLE主机最多可以发送 120 字节用户数据， BLE 从机最多可以发送 120 字节用户数据。而这个<br>Connection Interval 就是我们常说的“连接间隔”。所以可知， BLE链路层传输速率的快慢主要由以下因素决定：</p>
+<ol>
+<li>Connection Interval 的大小；</li>
+<li>每个 Connection Event 可以发送多少个 Link Layer Packet；</li>
+<li>每个 Link Layer Packet 可以负载多少用户数据；</li>
+<li>相邻 Link Layer Packet之间的时间间隔T_IFS。</li>
+</ol>
+<h1 id="6-PHY-LAYER"><a href="#6-PHY-LAYER" class="headerlink" title="6. PHY LAYER"></a>6. PHY LAYER</h1><p><img src="/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/phy.png"></p>
+<p>上图为1M PHY和2M PHY在2404频点发送数据0b1010的对比图。</p>
+<p>BLE的调制方式为GFSK，BLE定义在信道中传输的是二进制符号（波形），即1个符号（波形）表示1个比特，其中相对频点正偏代表数字基带信号1，相对频点负偏的代表数字基带信号0。</p>
+<p>之所以速率提高了，本质应该是2M PHY的码长变小了，即发送一个符号（波形）所需的时间变小了。</p>
+<blockquote>
+<p>BLE规范原文：A binary one shall be represented by a positive frequency deviation, and a binary zero shall be represented by a negative frequency deviation.<br>1M PHY：<br>    The mandatory symbol rate is 1 megasymbol per second (Msym&#x2F;s), where 1 symbol represents 1 bit therefore supporting a bit rate of 1 megabit per second (Mb&#x2F;s), which is referred to as the LE 1M PHY<br>2M PHY：<br>    An optional symbol rate of 2 Msym&#x2F;s may be supported, with a bit rate of 2 Mb&#x2F;s, which is referred to as the LE 2M PHY. </p>
+</blockquote>
+<h2 id="1M-PHY和2M-PHY的差异"><a href="#1M-PHY和2M-PHY的差异" class="headerlink" title="1M PHY和2M PHY的差异"></a>1M PHY和2M PHY的差异</h2><ul>
+<li>1M PHY的正偏和负偏至少需要达到185Khz，2M PHY的正偏和负偏至少需要达到370Khz</li>
+<li>2M PHY的比特率是1M PHY的两倍，即2M PHY传输完0b1010的时间是1M PHY的一半</li>
+</ul>
+<h1 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h1><p>提高吞吐量的途径有以下几种方式：</p>
+<ul>
+<li><p>GATT</p>
+<ul>
+<li>client用write without response而不要用write characteristic value</li>
+<li>server用notification而不要用indication</li>
+<li>ATT_MTU尽可能大（这样可以减少L2CAP的帧头数量，通过Fragmentation来尽可能占据带宽，提高吞吐量）</li>
+</ul>
+</li>
+<li><p>L2CAP</p>
+<ul>
+<li>NULL（应用层没啥可以做的）</li>
+</ul>
+</li>
+<li><p>LINK LAYER</p>
+<ul>
+<li>减少连接间隔（connection interval）</li>
+<li>增大连接事件（connection event）</li>
+<li>启用数据包扩展特性（link layer packet）</li>
+</ul>
+</li>
+<li><p>PHY LAYER</p>
+<ul>
+<li>启用2M PHY特性（BLE5.0可选特性）</li>
+</ul>
+</li>
+</ul>
+<h1 id="8-参考资料"><a href="#8-参考资料" class="headerlink" title="8. 参考资料"></a>8. 参考资料</h1><ul>
+<li>《RW-BLE-HOST-SW-FS_2mbps》</li>
+<li>《Core_v5.0》</li>
+<li>nimble源码</li>
+<li>《ZLG52810P0-1-TC透传模块速率参考手册 V1.01》</li>
+<li><a target="_blank" rel="noopener" href="https://wenku.baidu.com/view/86a89ffbc67da26925c52cc58bd63186bceb92e5.html">波特率和比特率及吞吐率三者概念</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av28491396/?p=27&t=40">《通信原理》曹丽娜-西安电子科技大学-第一章、第六章</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ZQ07506149/article/details/85225731">BLE 5 之 物理层</a></li>
+<li>《RF-PHY.TS.5.0.3》</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>“如果觉得还不错，请我喝杯咖啡吧~”</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Jayden Huang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/" title="浅谈BLE吞吐量">https://jaydenh215.github.io/2020/01/02/%E6%B5%85%E8%B0%88BLE%E5%90%9E%E5%90%90%E9%87%8F/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ble/" rel="tag"># ble</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/17/%E6%B5%85%E8%B0%88BLE%E4%B8%AD%E7%9A%84cortexm%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5/" rel="next" title="浅谈BLE中的cortexm编译链接">
+                <i class="fa fa-chevron-left"></i> 浅谈BLE中的cortexm编译链接
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/05/%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%AE%9A%E5%BE%8B%E5%92%8C%E5%AE%9A%E7%90%86%EF%BC%880%EF%BC%89/" rel="prev" title="电路基础——基本概念、定律和定理（0）">
+                电路基础——基本概念、定律和定理（0） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)]; 
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:jaydenhuanggz@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-BLE%E5%8D%8F%E8%AE%AE%E6%A0%88%E6%A1%86%E6%9E%B6"><span class="nav-text">1. BLE协议栈框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-GATT"><span class="nav-text">2. GATT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-ATT-PROTOCOL"><span class="nav-text">3. ATT PROTOCOL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Write-Command-format"><span class="nav-text">3.1. Write Command format</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Handle-Value-Notification-format"><span class="nav-text">3.2. Handle Value Notification format</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-ATT-MTU%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-text">3.3. ATT_MTU的定义</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-L2CAP-SPEC"><span class="nav-text">4. L2CAP SPEC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-SDU-Service-Data-Unit"><span class="nav-text">4.1. SDU(Service Data Unit)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-B-frame"><span class="nav-text">4.2. B-frame</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-MTU-Maximum-Transmission-Unit-min-23"><span class="nav-text">4.3. MTU(Maximum Transmission Unit), min 23</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-MPS-Maximum-PDU-payload-Size-max-65535"><span class="nav-text">4.4. MPS(Maximum PDU payload Size), max 65535</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-Segmentation-and-Reassembly"><span class="nav-text">4.5. Segmentation and Reassembly</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-6-Fragmentation-and-Recombination"><span class="nav-text">4.6. Fragmentation and Recombination</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-LINK-LAYER"><span class="nav-text">5. LINK LAYER</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-Link-layer-packet"><span class="nav-text">5.1. Link layer packet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-1-ble4-0"><span class="nav-text">5.1.1. ble4.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-2-ble4-2"><span class="nav-text">5.1.2. ble4.2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-BLE%E8%BF%9E%E6%8E%A5%E4%BC%A0%E8%BE%93%E5%8E%9F%E7%90%86%E8%AF%B4%E6%98%8E"><span class="nav-text">5.2. BLE连接传输原理说明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-PHY-LAYER"><span class="nav-text">6. PHY LAYER</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1M-PHY%E5%92%8C2M-PHY%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-text">1M PHY和2M PHY的差异</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-%E6%80%BB%E7%BB%93"><span class="nav-text">7. 总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">8. 参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+      <div class="wechat_channel">
+        <br>
+        <img src ="/images/wechat.png">
+      </div>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jayden Huang</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz',
+        appKey: 'ELsjbrq1xEPuSkAMz3v4vhge',
+        placeholder: 'Comment here ...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+        visitor: true,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz", "ELsjbrq1xEPuSkAMz3v4vhge");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

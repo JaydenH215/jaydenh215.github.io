@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="rtthread,nimble," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="多角度学习controller，uml还不熟练，欢迎斧正。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rtt+nimble揭秘系列——controller（7）">
+<meta property="og:url" content="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/index.html">
+<meta property="og:site_name" content="Jayden&#39;s Blog">
+<meta property="og:description" content="多角度学习controller，uml还不熟练，欢迎斧正。">
+<meta property="og:locale">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/controller%E4%BC%AA%E7%B3%BB%E7%BB%9F%E6%A1%86%E5%9B%BE.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/controller%E7%94%A8%E4%BE%8B%E5%9B%BE.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/controller%E7%B1%BB%E5%9B%BE.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/ll_sm.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/adv_sm.svg">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/conn_sm.svg">
+<meta property="article:published_time" content="2019-12-02T14:42:35.000Z">
+<meta property="article:modified_time" content="2025-02-15T08:13:09.228Z">
+<meta property="article:author" content="Jayden Huang">
+<meta property="article:tag" content="rtthread">
+<meta property="article:tag" content="nimble">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/controller%E4%BC%AA%E7%B3%BB%E7%BB%9F%E6%A1%86%E5%9B%BE.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jaydenh215.github.io/2019/12/02/rtt-nimble揭秘系列——controller（7）/"/>
+
+
+
+
+
+  <title>rtt+nimble揭秘系列——controller（7） | Jayden's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jayden's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jayden's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">rtt+nimble揭秘系列——controller（7）</h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-02T22:42:35+08:00">
+                2019-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%80%E5%BE%97%E4%B9%8B%E8%A7%81/" itemprop="url" rel="index">
+                    <span itemprop="name">一得之见</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/" class="leancloud_visitors" data-flag-title="rtt+nimble揭秘系列——controller（7）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>多角度学习controller，uml还不熟练，欢迎斧正。</p>
+<span id="more"></span> 
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>只学习slave部分，master可以根据slave的思路去看。</p>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><!-- TOC -->
+
+<ul>
+<li><a href="#1-%E4%BC%AA%E7%B3%BB%E7%BB%9F%E6%A1%86%E5%9B%BE">1. 伪系统框图</a></li>
+<li><a href="#2-%E7%94%A8%E4%BE%8B%E5%9B%BE">2. 用例图</a></li>
+<li><a href="#3-%E7%B1%BB%E5%9B%BE">3. 类图</a></li>
+<li><a href="#4-%E7%8A%B6%E6%80%81%E5%9B%BE">4. 状态图</a></li>
+<li><a href="#5-%E6%97%B6%E5%BA%8F%E5%9B%BE">5. 时序图</a></li>
+<li><a href="#6-misc">6. MISC</a></li>
+<li><a href="#7-%E6%80%BB%E7%BB%93">7. 总结</a></li>
+</ul>
+<!-- /TOC -->
+
+<h1 id="1-伪系统框图"><a href="#1-伪系统框图" class="headerlink" title="1. 伪系统框图"></a>1. 伪系统框图</h1><p>笔者觉得正常的系统框图不能表现每个组件之间的关系，所以加上一些箭头来表示controller涉及到的组件，箭头指向<code>被调用的组件</code>。</p>
+<p><img src="/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/controller%E4%BC%AA%E7%B3%BB%E7%BB%9F%E6%A1%86%E5%9B%BE.png"></p>
+<h1 id="2-用例图"><a href="#2-用例图" class="headerlink" title="2. 用例图"></a>2. 用例图</h1><p><img src="/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/controller%E7%94%A8%E4%BE%8B%E5%9B%BE.png"></p>
+<p>用用例图简单描述系统的功能需求是一个不错的工具，controller的功能比图中的要多，但是我们只针对图中的几个重点功能展开学习，其他细枝末节有需要再看。</p>
+<h1 id="3-类图"><a href="#3-类图" class="headerlink" title="3. 类图"></a>3. 类图</h1><p><img src="/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/controller%E7%B1%BB%E5%9B%BE.png"></p>
+<ul>
+<li>ble_ll_sched</li>
+</ul>
+<p>芯片的射频收发器只有一个，但是ble支持多链路共存，就会存在不同链路竞争同一个射频收发器的情况，这时候就需要一个调度器来做仲裁者的角色，决定某个时刻的射频资源释放给哪个链路，这个就是“射频时间片调度器”。</p>
+<ul>
+<li>ble_ll_conn和ble_ll_conn_sm</li>
+</ul>
+<p>其中一种竞争射频收发器的链路就是“连接链路”；那么这些连接链路有什么异同呢？相同的地方就是这些链路收发数据的方法，断开连接的方法都是通用的，差异的地方就是每个链路的连接参数、跳频表、状态标示位等是不一样的。</p>
+<p>所以把ble_ll_conn看成是ble_ll_conn_sm类的方法集合，而ble_ll_conn_sm就是包含不同属性的实例。</p>
+<ul>
+<li>ble_ll_adv和ble_ll_adv_sm</li>
+</ul>
+<p>另外一种竞争射频收发器的链路就是“广播链路”；同上，但是目前不讨论ble5.0的情况，所以不会同时存在两条广播链路，即只有一个ble_ll_adv_sm实例。</p>
+<h1 id="4-状态图"><a href="#4-状态图" class="headerlink" title="4. 状态图"></a>4. 状态图</h1><p><img src="/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/ll_sm.png"></p>
+<p>ble4.1之后链路层支持多链路共存，每个链路都有可能处于上图5个状态中的1个，在协议栈刚初始化完成时，每个链路都处于默认状态，也就是STANDBY状态，通过下面的状态图来了解默认状态下的链路是如何转换成<code>广播链路</code>和<code>连接链路</code>的。</p>
+<p>作图工具是Quantum Leaps,LLC公司的产品——qm，有兴趣的可以看我<a target="_blank" rel="noopener" href="https://github.com/JaydenH215/qp_notebook/blob/master/%E5%85%A5%E9%97%A8%E7%AF%87.md">github</a>之前做的简介。</p>
+<p>因为复杂，所以笔者根据个人理解做了一些简化，UML图中部分语法会与实际源码有所违背，但是整体框架是一样的，实际应以源码为准。</p>
+<ul>
+<li>广播链路</li>
+</ul>
+<p><img src="/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/adv_sm.svg"></p>
+<p>实际上广播链路还有很多细枝末节，但是这里只抓重点了解，所以通过上面的状态图可分析的有限场景如下：</p>
+<ol>
+<li>STANDBY状态下host通过hci调用ble_ll_adv_sm_start启动广播</li>
+<li>广播状态下，收到无效包</li>
+<li>广播状态下，收到扫描请求包，发送扫描响应包</li>
+<li>广播状态下，收到连接请求包</li>
+<li>在一个广播事件中，切换下一个广播通道</li>
+<li>当前广播事件结束，切换下一个广播事件</li>
+<li>在各个状态下host通过hci调用ble_ll_adv_sm_stop停止广播</li>
+</ol>
+<ul>
+<li>连接链路</li>
+</ul>
+<p><img src="/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/conn_sm.svg"></p>
+<p>实际上连接链路还有很多细枝末节，但是这里只抓重点了解，所以通过上面的状态图可分析的有限场景如下：</p>
+<ol>
+<li>创建连接成功，但建立连接失败</li>
+<li>应答和流控机制</li>
+<li>无上层数据发送，即发送EMPTY PDU</li>
+<li>有上层数据发送，即发送L2CAP message</li>
+<li>收到peer有效数据包，发送到上层</li>
+<li>在一个连接事件中，切换TX&#x2F;RX</li>
+<li>当前连接事件结束，切换下一个连接事件</li>
+<li>supervision超时断开</li>
+</ol>
+<h1 id="5-时序图"><a href="#5-时序图" class="headerlink" title="5. 时序图"></a>5. 时序图</h1><p>推荐<a target="_blank" rel="noopener" href="https://wnnwoo.github.io/">wnnwoo前辈</a>的nimble相关文章，图本并茂分析的很好。</p>
+<h1 id="6-MISC"><a href="#6-MISC" class="headerlink" title="6. MISC"></a>6. MISC</h1><ul>
+<li>关于从射频时间片调度器申请到的时间片</li>
+</ul>
+<p>一个时间片用一个“广播事”或“连接事件”来表述，每个事件中可能包含一个或多个发送、接收射频数据的过程，比如：某个广播事件从调度器申请到t1-t2时刻的射频资源，那么在t1-t2期间既有发送广播包，也有接收扫描请求包和接收连接请求包的过程。</p>
+<h1 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h1><p>controller确实复杂，理解起来难免忽略了许多细节，但是无碍，这次学习nimble了解controller的实现细节目的达到了，以后工作中遇到什么问题，也应该知道怎么在源码中找到答案了。</p>
+<p>关于host部分以后有时间再看吧，估计最近都不会花太多时间在nimble上了，毕竟又有了新的学习目标了哈哈哈。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>“如果觉得还不错，请我喝杯咖啡吧~”</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Jayden Huang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/" title="rtt+nimble揭秘系列——controller（7）">https://jaydenh215.github.io/2019/12/02/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94controller%EF%BC%887%EF%BC%89/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/rtthread/" rel="tag"># rtthread</a>
+          
+            <a href="/tags/nimble/" rel="tag"># nimble</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/29/mcu%E5%BC%82%E5%B8%B8FAQ/" rel="next" title="mcu异常FAQ">
+                <i class="fa fa-chevron-left"></i> mcu异常FAQ
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/10/python%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2/" rel="prev" title="python数据转换">
+                python数据转换 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)]; 
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:jaydenhuanggz@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E4%BC%AA%E7%B3%BB%E7%BB%9F%E6%A1%86%E5%9B%BE"><span class="nav-text">1. 伪系统框图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E7%94%A8%E4%BE%8B%E5%9B%BE"><span class="nav-text">2. 用例图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E7%B1%BB%E5%9B%BE"><span class="nav-text">3. 类图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E7%8A%B6%E6%80%81%E5%9B%BE"><span class="nav-text">4. 状态图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E6%97%B6%E5%BA%8F%E5%9B%BE"><span class="nav-text">5. 时序图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-MISC"><span class="nav-text">6. MISC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-%E6%80%BB%E7%BB%93"><span class="nav-text">7. 总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+      <div class="wechat_channel">
+        <br>
+        <img src ="/images/wechat.png">
+      </div>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jayden Huang</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz',
+        appKey: 'ELsjbrq1xEPuSkAMz3v4vhge',
+        placeholder: 'Comment here ...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+        visitor: true,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz", "ELsjbrq1xEPuSkAMz3v4vhge");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

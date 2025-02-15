@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="rtthread,nimble," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="主要介绍phy层的射频工作机制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rtt+nimble揭秘系列——phy（6）">
+<meta property="og:url" content="https://jaydenh215.github.io/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/index.html">
+<meta property="og:site_name" content="Jayden&#39;s Blog">
+<meta property="og:description" content="主要介绍phy层的射频工作机制。">
+<meta property="og:locale">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/phy.png">
+<meta property="og:image" content="https://jaydenh215.github.io/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/adv_sch.jpg">
+<meta property="article:published_time" content="2019-11-07T15:04:37.000Z">
+<meta property="article:modified_time" content="2025-02-15T08:13:09.230Z">
+<meta property="article:author" content="Jayden Huang">
+<meta property="article:tag" content="rtthread">
+<meta property="article:tag" content="nimble">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jaydenh215.github.io/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/phy.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jaydenh215.github.io/2019/11/07/rtt-nimble揭秘系列——phy（6）/"/>
+
+
+
+
+
+  <title>rtt+nimble揭秘系列——phy（6） | Jayden's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jayden's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jaydenh215.github.io/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jayden's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">rtt+nimble揭秘系列——phy（6）</h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-07T23:04:37+08:00">
+                2019-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%80%E5%BE%97%E4%B9%8B%E8%A7%81/" itemprop="url" rel="index">
+                    <span itemprop="name">一得之见</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/" class="leancloud_visitors" data-flag-title="rtt+nimble揭秘系列——phy（6）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>主要介绍phy层的射频工作机制。</p>
+<span id="more"></span> 
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>物理层与芯片本身强相关，这里仅分析nrf52的phy层调度相关内容。</p>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><!-- TOC -->
+
+<ul>
+<li><a href="#1-%E6%9C%AF%E8%AF%AD">1. 术语</a></li>
+<li><a href="#2-%E6%80%BB%E8%A7%88">2. 总览</a><ul>
+<li><a href="#21-%E6%A1%86%E5%9B%BE">2.1. 框图</a></li>
+<li><a href="#22-%E5%B9%BF%E6%92%AD%E8%B0%83%E5%BA%A6%E4%BE%8B%E5%AD%90">2.2. 广播调度例子</a></li>
+</ul>
+</li>
+<li><a href="#3-phy%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E9%83%A8%E5%B1%9E%E6%80%A7">3. phy对象的内部属性</a><ul>
+<li><a href="#31-xcvr-clock-settle-time">3.1. xcvr clock settle time</a></li>
+<li><a href="#32-various-radio-timings">3.2. various radio timings</a><ul>
+<li><a href="#321-ramp-up-times">3.2.1. ramp-up times</a></li>
+<li><a href="#322-delay-between-events_ready-and-start-of-tx">3.2.2. delay between EVENTS_READY and start of tx</a></li>
+<li><a href="#323-delay-between-events_end-and-end-of-txd-packet">3.2.3. delay between EVENTS_END and end of txd packet</a></li>
+<li><a href="#324-delay-between-rxd-access-address-and-events_address">3.2.4. delay between rxd access address and EVENTS_ADDRESS</a></li>
+<li><a href="#325-delay-between-end-of-rxd-packet-and-events_end">3.2.5. delay between end of rxd packet and EVENTS_END</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-phy%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%AF%B9%E5%A4%96%E6%96%B9%E6%B3%95">4. phy对象的对外方法</a><ul>
+<li><a href="#41-ble_phy_tx_set_start_time">4.1. ble_phy_tx_set_start_time</a></li>
+<li><a href="#42-ble_phy_rx_set_start_time">4.2. ble_phy_rx_set_start_time</a></li>
+<li><a href="#43-ble_phy_set_txend_cb">4.3. ble_phy_set_txend_cb</a></li>
+<li><a href="#44-ble_phy_tx">4.4. ble_phy_tx</a></li>
+<li><a href="#45-ble_phy_rx">4.5. ble_phy_rx</a></li>
+<li><a href="#46-ble_phy_rxpdu_copy">4.6. ble_phy_rxpdu_copy</a></li>
+</ul>
+</li>
+<li><a href="#5-phy%E5%AF%B9%E8%B1%A1%E4%BD%BF%E7%94%A8%E5%85%B6%E4%BB%96%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E6%B3%95">5. phy对象使用其他对象的方法</a><ul>
+<li><a href="#51-ble_ll_rx_start">5.1. ble_ll_rx_start</a></li>
+<li><a href="#52-ble_ll_rx_end">5.2. ble_ll_rx_end</a></li>
+<li><a href="#53-ble_ll_state_get">5.3. ble_ll_state_get</a></li>
+<li><a href="#54-ble_ll_wfr_timer_exp">5.4. ble_ll_wfr_timer_exp</a></li>
+</ul>
+</li>
+<li><a href="#6-phy%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0">6. phy对象的内部实现</a><ul>
+<li><a href="#61-%E6%A6%82%E8%BF%B0">6.1. 概述</a><ul>
+<li><a href="#611-%E5%9C%A8%E6%8C%87%E5%AE%9A%E7%9A%84%E6%97%B6%E5%88%BB%E5%8F%91%E9%80%81%E5%B0%84%E9%A2%91%E6%95%B0%E6%8D%AE">6.1.1. 在指定的时刻发送射频数据</a></li>
+<li><a href="#612-%E5%9C%A8%E6%8C%87%E5%AE%9A%E7%9A%84%E6%97%B6%E5%88%BB%E6%8E%A5%E6%94%B6%E5%B0%84%E9%A2%91%E6%95%B0%E6%8D%AE%E8%8B%A5%E5%9C%A8%E5%90%8E%E7%BB%AD%E6%8C%87%E5%AE%9A%E6%97%B6%E9%97%B4%E6%AE%B5%E5%86%85%E6%B2%A1%E6%94%B6%E5%88%B0%E5%88%99%E8%AE%A4%E4%B8%BA%E6%8E%A5%E6%94%B6%E8%B6%85%E6%97%B6%E8%8B%A5%E6%94%B6%E5%88%B0%E5%88%99%E4%BC%A0%E9%80%92%E7%BB%99%E4%B8%8A%E5%B1%82%E5%A4%84%E7%90%86">6.1.2. 在指定的时刻接收射频数据，若在后续指定时间段内没收到，则认为接收超时，若收到则传递给上层处理</a></li>
+<li><a href="#613-%E5%88%87%E6%8D%A2%E5%B0%84%E9%A2%91%E5%8F%91%E9%80%81%E5%92%8C%E5%B0%84%E9%A2%91%E6%8E%A5%E6%94%B6">6.1.3. 切换射频发送和射频接收</a></li>
+</ul>
+</li>
+<li><a href="#62-%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E">6.2. 详细说明</a></li>
+</ul>
+</li>
+<li><a href="#7-%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E">7. 补充说明</a><ul>
+<li><a href="#71-%E6%97%B6%E9%97%B4%E8%A1%A5%E5%81%BF">7.1. 时间补偿</a></li>
+<li><a href="#72-radio%E6%95%B0%E6%8D%AE%E5%8C%85%E9%85%8D%E7%BD%AE">7.2. radio数据包配置</a></li>
+</ul>
+</li>
+<li><a href="#8-%E5%85%B3%E9%97%ADtimer0%E7%9A%84%E6%97%B6%E6%9C%BA">8. 关闭timer0的时机</a></li>
+<li><a href="#9-%E6%80%BB%E7%BB%93">9. 总结</a></li>
+</ul>
+<!-- /TOC -->
+
+<h1 id="1-术语"><a href="#1-术语" class="headerlink" title="1. 术语"></a>1. 术语</h1><ul>
+<li>wfr：wait for response（用于计算radio rx超时时间）</li>
+<li>xcvr：transceiver（发射接收器）</li>
+<li>ll：link layer（链路层）</li>
+</ul>
+<h1 id="2-总览"><a href="#2-总览" class="headerlink" title="2. 总览"></a>2. 总览</h1><h2 id="2-1-框图"><a href="#2-1-框图" class="headerlink" title="2.1. 框图"></a>2.1. 框图</h2><p>phy对象内部会使用其他对象的方法。</p>
+<p><img src="/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/phy.png"></p>
+<h2 id="2-2-广播调度例子"><a href="#2-2-广播调度例子" class="headerlink" title="2.2. 广播调度例子"></a>2.2. 广播调度例子</h2><p>下图是一个广播例子，简单展示了phy对象对内对外是如何协同工作，完成调度的。</p>
+<p><img src="/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/adv_sch.jpg"></p>
+<h1 id="3-phy对象的内部属性"><a href="#3-phy对象的内部属性" class="headerlink" title="3. phy对象的内部属性"></a>3. phy对象的内部属性</h1><h2 id="3-1-xcvr-clock-settle-time"><a href="#3-1-xcvr-clock-settle-time" class="headerlink" title="3.1. xcvr clock settle time"></a>3.1. xcvr clock settle time</h2><p>因为需要保持低功耗，所以不需要使用xcvr时候，应该将其时钟也一同关闭，当需要在某个时刻再次打开xcvr时候，需要考虑时钟的settle time，即需提前先打开xcvr时钟。</p>
+<h2 id="3-2-various-radio-timings"><a href="#3-2-various-radio-timings" class="headerlink" title="3.2. various radio timings"></a>3.2. various radio timings</h2><p>radio外设相关的延时</p>
+<h3 id="3-2-1-ramp-up-times"><a href="#3-2-1-ramp-up-times" class="headerlink" title="3.2.1. ramp-up times"></a>3.2.1. ramp-up times</h3><p>ramp-up times即操作射频收发寄存器后，直到真正发出射频信号或者已准备好接收射频信号的所需时间。</p>
+<p>需考虑这部分时间确保在预定时刻发送射频信号。</p>
+<h3 id="3-2-2-delay-between-EVENTS-READY-and-start-of-tx"><a href="#3-2-2-delay-between-EVENTS-READY-and-start-of-tx" class="headerlink" title="3.2.2. delay between EVENTS_READY and start of tx"></a>3.2.2. delay between EVENTS_READY and start of tx</h3><p>产生EVENTS_READY后，到真正开始发送射频信号的延时。</p>
+<p>因为启动射频是由ppi+radio+timer0+rtc0来联动的，即timer0时间到触发RADIO-&gt;TASKS_TXEN，然后延时ramp-up time，接着产生EVENTS_READY，由于radio short，直接TASKS_START。需考虑这部分时间确保在预定时刻发送射频信号。</p>
+<h3 id="3-2-3-delay-between-EVENTS-END-and-end-of-txd-packet"><a href="#3-2-3-delay-between-EVENTS-END-and-end-of-txd-packet" class="headerlink" title="3.2.3. delay between EVENTS_END and end of txd packet"></a>3.2.3. delay between EVENTS_END and end of txd packet</h3><p>产生EVENTS_END后，到真正发送完射频信号的延时。</p>
+<p>切换成接收&#x2F;关闭射频时，需考虑这部分时间确保射频数据发送完整，防止发送数据断尾。</p>
+<h3 id="3-2-4-delay-between-rxd-access-address-and-EVENTS-ADDRESS"><a href="#3-2-4-delay-between-rxd-access-address-and-EVENTS-ADDRESS" class="headerlink" title="3.2.4. delay between rxd access address and EVENTS_ADDRESS"></a>3.2.4. delay between rxd access address and EVENTS_ADDRESS</h3><p>收到合法access addr到产生EVENTS_ADDRESS的延时。</p>
+<p>当启动radio接收超时定时器时，需考虑这部分时间，确保在指定时间内真的没有收到合法的access addr。</p>
+<p>当计算当前数据包何时被捕获时，需考虑这部分时间，用于反推。</p>
+<h3 id="3-2-5-delay-between-end-of-rxd-packet-and-EVENTS-END"><a href="#3-2-5-delay-between-end-of-rxd-packet-and-EVENTS-END" class="headerlink" title="3.2.5. delay between end of rxd packet and EVENTS_END"></a>3.2.5. delay between end of rxd packet and EVENTS_END</h3><p>接收一包结束到产生EVENTS_END的延时。</p>
+<p>当从接收切换成发送，计算上一次捕获到数据包最后一个bit的时刻，然后增加T_IFS启动发送，需考虑这部分时间确保在预定时刻发送射频信号。</p>
+<h1 id="4-phy对象的对外方法"><a href="#4-phy对象的对外方法" class="headerlink" title="4. phy对象的对外方法"></a>4. phy对象的对外方法</h1><h2 id="4-1-ble-phy-tx-set-start-time"><a href="#4-1-ble-phy-tx-set-start-time" class="headerlink" title="4.1. ble_phy_tx_set_start_time"></a>4.1. ble_phy_tx_set_start_time</h2><p>nimble中射频发射有两种应用场景：</p>
+<ol>
+<li>rx结束，根据T_IFS切换到tx</li>
+<li>链路层发起tx</li>
+</ol>
+<p>第1中情况会在phy的<code>ble_phy_rx_end_isr</code>中实现，而第2种实现就是调用<code>ble_phy_tx_set_start_time</code>函数了，该函数用于设定一个定时时间（粗略定时rtc0+精准定时timer0），radio会在该时刻发送preamble的第一个bit。</p>
+<h2 id="4-2-ble-phy-rx-set-start-time"><a href="#4-2-ble-phy-rx-set-start-time" class="headerlink" title="4.2. ble_phy_rx_set_start_time"></a>4.2. ble_phy_rx_set_start_time</h2><p>nimble中射频接收有两种应用场景：</p>
+<ol>
+<li>tx结束，根据T_IFS切换到rx</li>
+<li>链路层发起rx</li>
+</ol>
+<p>第1中情况会在phy的<code>ble_phy_tx_end_isr</code>中实现，而第2种实现就是调用<code>ble_phy_rx_set_start_time</code>函数了，该函数用于设定一个定时时间（粗略定时rtc0+精准定时timer0），radio会在该时刻开始接收射频数据。</p>
+<h2 id="4-3-ble-phy-set-txend-cb"><a href="#4-3-ble-phy-set-txend-cb" class="headerlink" title="4.3. ble_phy_set_txend_cb"></a>4.3. ble_phy_set_txend_cb</h2><p>该函数输入参数有一个是函数指针，在<code>ble_phy_tx_end_isr</code>中打钩子函数，用于通知链路层发送结束。</p>
+<h2 id="4-4-ble-phy-tx"><a href="#4-4-ble-phy-tx" class="headerlink" title="4.4. ble_phy_tx"></a>4.4. ble_phy_tx</h2><p>用于配置射频发送的参数，比如发送buffer、radio的shortcut配置和发送结束后是否需要自动切换到rx，但是不会真正启动射频发送。</p>
+<h2 id="4-5-ble-phy-rx"><a href="#4-5-ble-phy-rx" class="headerlink" title="4.5. ble_phy_rx"></a>4.5. ble_phy_rx</h2><p>用于配置射频接收的参数，比如接收buffer，radio的shortcut配置，但是不会真正启动射频接收。</p>
+<h2 id="4-6-ble-phy-rxpdu-copy"><a href="#4-6-ble-phy-rxpdu-copy" class="headerlink" title="4.6. ble_phy_rxpdu_copy"></a>4.6. ble_phy_rxpdu_copy</h2><p>用于获取上一次phy rx的pdu数据。</p>
+<h1 id="5-phy对象使用其他对象的方法"><a href="#5-phy对象使用其他对象的方法" class="headerlink" title="5. phy对象使用其他对象的方法"></a>5. phy对象使用其他对象的方法</h1><h2 id="5-1-ble-ll-rx-start"><a href="#5-1-ble-ll-rx-start" class="headerlink" title="5.1. ble_ll_rx_start"></a>5.1. ble_ll_rx_start</h2><p>收到pdu第一个字节之后，phy调用该方法，根据pdu的第一个字节即pdu type，来决定是否继续接收下面的帧，以及接收完应该如何处理。</p>
+<h2 id="5-2-ble-ll-rx-end"><a href="#5-2-ble-ll-rx-end" class="headerlink" title="5.2. ble_ll_rx_end"></a>5.2. ble_ll_rx_end</h2><p>收完一帧，开始处理这一帧，phy根据该方法返回结果判断是否要切换到tx，还是关闭射频外设。</p>
+<h2 id="5-3-ble-ll-state-get"><a href="#5-3-ble-ll-state-get" class="headerlink" title="5.3. ble_ll_state_get"></a>5.3. ble_ll_state_get</h2><p>获取当前链路层的状态，封装进<code>ble mbuf header</code>，在ble_ll_rx_end中调用，让链路层知道传递上去的帧是在哪个状态时接收到的。</p>
+<h2 id="5-4-ble-ll-wfr-timer-exp"><a href="#5-4-ble-ll-wfr-timer-exp" class="headerlink" title="5.4. ble_ll_wfr_timer_exp"></a>5.4. ble_ll_wfr_timer_exp</h2><p>如果接收超时，就会调用该函数。比如，在37信道发送可连接可发现广播，切换到接收后，没有在指定时间内收到CONNECT_IND或者SCAN_REQ，就会调用这个函数。</p>
+<h1 id="6-phy对象的内部实现"><a href="#6-phy对象的内部实现" class="headerlink" title="6. phy对象的内部实现"></a>6. phy对象的内部实现</h1><p>内部实现主要涉及<code>isr</code>和<code>ppi</code>、<code>timer0</code>、<code>rtc0</code>，下面先介绍它们之间的关系，然后分别介绍每个中断和外设的功能作用，最后举例在一些常见应用场景中是如何协同工作的。</p>
+<h2 id="6-1-概述"><a href="#6-1-概述" class="headerlink" title="6.1. 概述"></a>6.1. 概述</h2><p>phy核心功能可以用以下几句话总结：</p>
+<ol>
+<li>在指定的时刻发送射频数据。</li>
+<li>在指定的时刻接收射频数据，若在后续指定时间段内没收到，则认为接收超时，若收到则传递给上层处理。</li>
+<li>切换射频发送和射频接收</li>
+</ol>
+<h3 id="6-1-1-在指定的时刻发送射频数据"><a href="#6-1-1-在指定的时刻发送射频数据" class="headerlink" title="6.1.1. 在指定的时刻发送射频数据"></a>6.1.1. 在指定的时刻发送射频数据</h3><p>将<code>指定时刻</code>拆成尽可能多的<code>省电系统时钟tick</code>和一个<code>耗电精准时钟tick</code>，rtc0的CC[0]设置为省电tick，timer0的CC[0]设置为耗电tick。</p>
+<p>当rtc0的CC[0]事件触发时，配合ppi启动timer0。<br>当timer0的CC[0]事件触发时，配合ppi启动射频发送。</p>
+<h3 id="6-1-2-在指定的时刻接收射频数据，若在后续指定时间段内没收到，则认为接收超时，若收到则传递给上层处理"><a href="#6-1-2-在指定的时刻接收射频数据，若在后续指定时间段内没收到，则认为接收超时，若收到则传递给上层处理" class="headerlink" title="6.1.2. 在指定的时刻接收射频数据，若在后续指定时间段内没收到，则认为接收超时，若收到则传递给上层处理"></a>6.1.2. 在指定的时刻接收射频数据，若在后续指定时间段内没收到，则认为接收超时，若收到则传递给上层处理</h3><p>将<code>指定时刻</code>拆成尽可能多的<code>省电系统时钟tick</code>和尽可能少的<code>耗电精准时钟tick</code>，rtc0的CC[0]设置为尽可能多的省电tick，timer0的CC[0]设置为尽可能少的耗电tick。将<code>接收超时事件</code>拆成N个<code>耗电精准时钟tick</code>，timer0的CC[3]设置为N个耗电tick。</p>
+<p>当rtc0的CC[0]事件触发时，配合ppi启动timer0。<br>当timer0的CC[0]事件触发时，配合ppi启动射频接收。<br>当timer0的CC[3]事件触发时，配合ppi关闭射频接收。</p>
+<h3 id="6-1-3-切换射频发送和射频接收"><a href="#6-1-3-切换射频发送和射频接收" class="headerlink" title="6.1.3. 切换射频发送和射频接收"></a>6.1.3. 切换射频发送和射频接收</h3><ul>
+<li><p>链路层在启动射频发射时会设置<code>g_ble_phy_data.phy_transition</code>变量，在phy的ble_phy_tx_end_isr中会根据该变量判断下一步是切换到rx，还是关闭射频外设。</p>
+</li>
+<li><p>在ble_ll_wfr_timer_exp或ble_phy_rx_end_isr中会把接收结果传递给链路层，链路层决定下一步是切换到tx，还是关闭射频外设。</p>
+</li>
+</ul>
+<h2 id="6-2-详细说明"><a href="#6-2-详细说明" class="headerlink" title="6.2. 详细说明"></a>6.2. 详细说明</h2><ul>
+<li><p>ble_phy_rx_start_isr：收到access addr以及第一个字节后，使能RADIO_INTENSET_END_Msk中断。</p>
+</li>
+<li><p>ble_phy_rx_end_isr：接收一帧后会进入该分支，传递给链路层刚刚收到的那一帧。</p>
+</li>
+<li><p>ble_ll_wfr_timer_exp：接收超时会进入该分支，表示指定时间内没收到有效数据包。</p>
+</li>
+<li><p>ble_phy_tx_end_isr：发送玩一帧后会进入该分支，通知链路层发送完成，判断下一步是切换到rx，还是关闭射频外设。</p>
+</li>
+<li><p>ch4：当收到rx的RADIO-&gt;EVENT_ADDRESS时，触发NRF_TIMER0-&gt;TASKS_CAPTURE[3]，取消wfr定时器。</p>
+</li>
+<li><p>ch5：当收到NRF_TIMER0-&gt;EVENTS_COMPARE[3]，即wfr定时器超时，则触发NRF_RADIO-&gt;TASKS_DISABLE，关闭射频。</p>
+</li>
+<li><p>ch20：当收到TIMER0-&gt;EVENTS_COMPARE[0]时，触发RADIO-&gt;TASKS_TXEN，即通过timer0来硬件自动打开射频发射。</p>
+</li>
+<li><p>ch21：当收到TIMER0-&gt;EVENTS_COMPARE[0]时，触发RADIO-&gt;TASKS_RXEN，即通过timer0来硬件自动打开射频接收。</p>
+</li>
+<li><p>ch26：当收到tx&#x2F;rx的RADIO-&gt;EVENT_ADDRESS时，触发TIMER0-&gt;TASK_CAPTURE[1]，因为ADDRESS域是固定长度，所以可以用来计算捕获tx&#x2F;rx时刻。</p>
+</li>
+<li><p>ch27：当收到tx&#x2F;rx的RADIO-&gt;EVENT_END时，触发TIMER0-&gt;TASK_CAPTURE[2]，用于捕获tx&#x2F;rx结束（即收到CRC域最后一个bit）时刻。</p>
+</li>
+<li><p>ch31：当收到RTC0-&gt;EVENTS_COMPARE[0]时，触发TIMER0-&gt;TASKS_START，即通过RTC0来控制启动timer0，具体为用户指定一个时刻（RTC0 tick + timer0 us），当收到RTC0-&gt;EVENTS_COMPARE[0]时，说明tick（31us&#x2F;tick）已经计算完成，打开timer0计算剩下的时间（1us&#x2F;tick）。</p>
+</li>
+</ul>
+<h1 id="7-补充说明"><a href="#7-补充说明" class="headerlink" title="7. 补充说明"></a>7. 补充说明</h1><h2 id="7-1-时间补偿"><a href="#7-1-时间补偿" class="headerlink" title="7.1. 时间补偿"></a>7.1. 时间补偿</h2><p>cpu_time和rem_usecs，cpu_time表示从调用函数到目标时刻需要的tick个数，rem_usecs表示除了cpu_time之外，还需要多少个us才能达到目标时刻，且rem_usecs应该小于31。cpu_time与rtc外设有关，rem_usecs与timer外设有关。</p>
+<h2 id="7-2-radio数据包配置"><a href="#7-2-radio数据包配置" class="headerlink" title="7.2. radio数据包配置"></a>7.2. radio数据包配置</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> NRF_LFLEN_BITS          (8)     <span class="comment">//对应pdu header的8位lsb</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NRF_S0LEN               (1)     <span class="comment">//对应pdu header的8位msb</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NRF_S1LEN_BITS          (0)     <span class="comment">//这个域的长度为0，即舍弃该域</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NRF_MAXLEN              (255)   <span class="comment">//对应pdu payload</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NRF_BALEN               (3)     <span class="comment">//对应llpkt的4字节access address</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NRF_PCNF0               (NRF_LFLEN_BITS &lt;&lt; RADIO_PCNF0_LFLEN_Pos) | \</span></span><br><span class="line"><span class="meta">                                (RADIO_PCNF0_S1INCL_Msk) | \</span></span><br><span class="line"><span class="meta">                                (NRF_S0LEN &lt;&lt; RADIO_PCNF0_S0LEN_Pos) | \</span></span><br><span class="line"><span class="meta">                                (NRF_S1LEN_BITS &lt;&lt; RADIO_PCNF0_S1LEN_Pos)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NRF_PCNF0_1M            (NRF_PCNF0) | \</span></span><br><span class="line"><span class="meta">                                (RADIO_PCNF0_PLEN_8bit &lt;&lt; RADIO_PCNF0_PLEN_Pos) <span class="comment">//对应llpkt的1字节preamble</span></span></span><br><span class="line">                                </span><br></pre></td></tr></table></figure>
+
+<h1 id="8-关闭timer0的时机"><a href="#8-关闭timer0的时机" class="headerlink" title="8. 关闭timer0的时机"></a>8. 关闭timer0的时机</h1><p>发送完射频数据、接收完一帧射频数据、接收超时之后，都是关闭timer0的时机。</p>
+<h1 id="9-总结"><a href="#9-总结" class="headerlink" title="9. 总结"></a>9. 总结</h1><p>还有许多细节没关注到，总体问题不大，后面学习链路层再复习巩固。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>“如果觉得还不错，请我喝杯咖啡吧~”</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Jayden Huang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://jaydenh215.github.io/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/" title="rtt+nimble揭秘系列——phy（6）">https://jaydenh215.github.io/2019/11/07/rtt-nimble%E6%8F%AD%E7%A7%98%E7%B3%BB%E5%88%97%E2%80%94%E2%80%94phy%EF%BC%886%EF%BC%89/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/rtthread/" rel="tag"># rtthread</a>
+          
+            <a href="/tags/nimble/" rel="tag"># nimble</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/07/%E6%B5%85%E8%B0%88cortexm%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95/" rel="next" title="浅谈cortexm调试方法">
+                <i class="fa fa-chevron-left"></i> 浅谈cortexm调试方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/28/BQB%E8%AE%A4%E8%AF%81/" rel="prev" title="BQB认证">
+                BQB认证 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)]; 
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:jaydenhuanggz@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%9C%AF%E8%AF%AD"><span class="nav-text">1. 术语</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%80%BB%E8%A7%88"><span class="nav-text">2. 总览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%A1%86%E5%9B%BE"><span class="nav-text">2.1. 框图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E5%B9%BF%E6%92%AD%E8%B0%83%E5%BA%A6%E4%BE%8B%E5%AD%90"><span class="nav-text">2.2. 广播调度例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-phy%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E9%83%A8%E5%B1%9E%E6%80%A7"><span class="nav-text">3. phy对象的内部属性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-xcvr-clock-settle-time"><span class="nav-text">3.1. xcvr clock settle time</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-various-radio-timings"><span class="nav-text">3.2. various radio timings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1-ramp-up-times"><span class="nav-text">3.2.1. ramp-up times</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-2-delay-between-EVENTS-READY-and-start-of-tx"><span class="nav-text">3.2.2. delay between EVENTS_READY and start of tx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-3-delay-between-EVENTS-END-and-end-of-txd-packet"><span class="nav-text">3.2.3. delay between EVENTS_END and end of txd packet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-4-delay-between-rxd-access-address-and-EVENTS-ADDRESS"><span class="nav-text">3.2.4. delay between rxd access address and EVENTS_ADDRESS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-5-delay-between-end-of-rxd-packet-and-EVENTS-END"><span class="nav-text">3.2.5. delay between end of rxd packet and EVENTS_END</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-phy%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%AF%B9%E5%A4%96%E6%96%B9%E6%B3%95"><span class="nav-text">4. phy对象的对外方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-ble-phy-tx-set-start-time"><span class="nav-text">4.1. ble_phy_tx_set_start_time</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-ble-phy-rx-set-start-time"><span class="nav-text">4.2. ble_phy_rx_set_start_time</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-ble-phy-set-txend-cb"><span class="nav-text">4.3. ble_phy_set_txend_cb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-ble-phy-tx"><span class="nav-text">4.4. ble_phy_tx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-ble-phy-rx"><span class="nav-text">4.5. ble_phy_rx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-6-ble-phy-rxpdu-copy"><span class="nav-text">4.6. ble_phy_rxpdu_copy</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-phy%E5%AF%B9%E8%B1%A1%E4%BD%BF%E7%94%A8%E5%85%B6%E4%BB%96%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-text">5. phy对象使用其他对象的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-ble-ll-rx-start"><span class="nav-text">5.1. ble_ll_rx_start</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-ble-ll-rx-end"><span class="nav-text">5.2. ble_ll_rx_end</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-ble-ll-state-get"><span class="nav-text">5.3. ble_ll_state_get</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-ble-ll-wfr-timer-exp"><span class="nav-text">5.4. ble_ll_wfr_timer_exp</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-phy%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0"><span class="nav-text">6. phy对象的内部实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-%E6%A6%82%E8%BF%B0"><span class="nav-text">6.1. 概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-1-%E5%9C%A8%E6%8C%87%E5%AE%9A%E7%9A%84%E6%97%B6%E5%88%BB%E5%8F%91%E9%80%81%E5%B0%84%E9%A2%91%E6%95%B0%E6%8D%AE"><span class="nav-text">6.1.1. 在指定的时刻发送射频数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-2-%E5%9C%A8%E6%8C%87%E5%AE%9A%E7%9A%84%E6%97%B6%E5%88%BB%E6%8E%A5%E6%94%B6%E5%B0%84%E9%A2%91%E6%95%B0%E6%8D%AE%EF%BC%8C%E8%8B%A5%E5%9C%A8%E5%90%8E%E7%BB%AD%E6%8C%87%E5%AE%9A%E6%97%B6%E9%97%B4%E6%AE%B5%E5%86%85%E6%B2%A1%E6%94%B6%E5%88%B0%EF%BC%8C%E5%88%99%E8%AE%A4%E4%B8%BA%E6%8E%A5%E6%94%B6%E8%B6%85%E6%97%B6%EF%BC%8C%E8%8B%A5%E6%94%B6%E5%88%B0%E5%88%99%E4%BC%A0%E9%80%92%E7%BB%99%E4%B8%8A%E5%B1%82%E5%A4%84%E7%90%86"><span class="nav-text">6.1.2. 在指定的时刻接收射频数据，若在后续指定时间段内没收到，则认为接收超时，若收到则传递给上层处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-3-%E5%88%87%E6%8D%A2%E5%B0%84%E9%A2%91%E5%8F%91%E9%80%81%E5%92%8C%E5%B0%84%E9%A2%91%E6%8E%A5%E6%94%B6"><span class="nav-text">6.1.3. 切换射频发送和射频接收</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E"><span class="nav-text">6.2. 详细说明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E"><span class="nav-text">7. 补充说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-%E6%97%B6%E9%97%B4%E8%A1%A5%E5%81%BF"><span class="nav-text">7.1. 时间补偿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-radio%E6%95%B0%E6%8D%AE%E5%8C%85%E9%85%8D%E7%BD%AE"><span class="nav-text">7.2. radio数据包配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-%E5%85%B3%E9%97%ADtimer0%E7%9A%84%E6%97%B6%E6%9C%BA"><span class="nav-text">8. 关闭timer0的时机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-%E6%80%BB%E7%BB%93"><span class="nav-text">9. 总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+      <div class="wechat_channel">
+        <br>
+        <img src ="/images/wechat.png">
+      </div>
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jayden Huang</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz',
+        appKey: 'ELsjbrq1xEPuSkAMz3v4vhge',
+        placeholder: 'Comment here ...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+        visitor: true,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("C7jVqVxinDQnJVIfqKJSmXKb-gzGzoHsz", "ELsjbrq1xEPuSkAMz3v4vhge");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
