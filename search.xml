@@ -4217,6 +4217,25 @@ new Valine(&#123;
 <p>修改后：</p>
 <pre><code>.src=&#39;/static/api/js/share.js?cdnversion=&#39;+~(-new Date()/36e5)]; 
 </code></pre>
+<p>2025&#x2F;2&#x2F;16: 因为valine那部分是在线获取的，而它更新了layout，导致没有baidushare，我们自己把它加到评论区下方，即：</p>
+<p>修改<code>/themes/hexo-theme-next/layout/_macro/</code>目下下的<code>post.swig</code>文件</p>
+<p>修改前：</p>
+<pre><code>&#123;% if theme.post_copyright.enable and not is_index %&#125;
+      <div>
+        &#123;% include 'post-copyright.swig' with &#123; post: post &#125; %&#125;
+      </div>
+    &#123;% endif %&#125;
+</code></pre>
+<p>修改后：</p>
+<pre><code>&#123;% if theme.post_copyright.enable and not is_index %&#125;
+      <div>
+        &#123;% include 'post-copyright.swig' with &#123; post: post &#125; %&#125;
+        &#123;% if theme.baidushare %&#125;
+          &#123;% include '../_partials/share/baidushare.swig' %&#125;
+        &#123;% endif %&#125;
+  &lt;/div&gt;
+&#123;% endif %&#125;
+</code></pre>
 <h1 id="配置版权"><a href="#配置版权" class="headerlink" title="配置版权"></a>配置版权</h1><p>修改主题目录（&#x2F;themes&#x2F;hexo-theme-next）下的<code>_config.yml</code>文件</p>
 <pre><code>post_copyright:
 enable: true
